@@ -64,9 +64,8 @@ contract Example {
         require(result, "Wrong inputs");
     }
 
-    // TODO: - not working
     function testPairingG1() public view {
-        EIP1962.Pair[] memory pairs = EIP1962.Pair[
+        EIP1962.G1Pair[] memory pairs = EIP1962.Pair[
             EIP1962.PairG1({
                 p1: EIP1962.G1Point(1, 2),
                 p2: EIP1962.G1Point(1, 3)
@@ -77,7 +76,7 @@ contract Example {
     }
 
     function testPairingG2() public view {
-        EIP1962.Pair[] memory pairs = EIP1962.Pair[
+        EIP1962.G2Pair[] memory pairs = EIP1962.Pair[
             EIP1962.PairG2({
                 p1: EIP1962.G2PointG2Point(
                     [11559732032986387107991004021392285783925812861821192530917403151452391805634,
