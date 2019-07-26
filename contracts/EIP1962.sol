@@ -50,7 +50,7 @@ library EIP1962 {
         uint X;
         uint Y;
     }
-    
+
     struct G2Point {
         uint[2] X;
         uint[2] Y;
@@ -348,16 +348,18 @@ library EIP1962 {
         CurveParams memory curveParams,
         Pair[] memory pairs
     ) public view returns (bytes memory result) {
+        uint8 numPairs = uint8(pairs.length);
         verifyCorrectPairingPairsLengths(curveParams, numPairs, pairs);
         bytes memory data;
+        bytes memory pairsBytes = pairs.toBytes();
         bytes memory opData = getPairingOpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
         data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, Bytes.toBytesFromUInt8(uint8(pairs.length)));
-        data = Bytes.concat(data, pairs.toBytes());
+        data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
+        data = Bytes.concat(data, pairsBytes);
         result = callEip1962(
             data,
-            2 + opData.length + pairs.length,
+            2 + opData.length + pairsBytes.length,
             1
         );
     }
