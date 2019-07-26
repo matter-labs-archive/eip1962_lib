@@ -1,7 +1,8 @@
 pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
-import {Bytes} from "./Bytes.sol";
+import {Bytes} from "../contracts/Bytes.sol";
+import {Pairing} from "../contracts/Pairing.sol";
 
 library EIP1962 {
 
@@ -41,9 +42,15 @@ library EIP1962 {
         uint8 sign;
     }
 
-    // Curves
+    struct Pair {
+        Pairing.G1Point p1;
+        Pairing.G1Point p2;
+    }
 
-    function exampleCurveParams() public pure returns (CurveParams memory params) {
+    // Curves list
+
+    // TODO: - parameters are not correct
+    function bls12() public pure returns (CurveParams memory params) {
         params = EIP1962.CurveParams({
             curveType: 0x01,
             fieldLength: 0x01,
@@ -83,31 +90,31 @@ library EIP1962 {
 
     function verifyCorrectG1AddDataLengths(
         CurveParams memory curveParams,
-        bytes memory lhs,
-        bytes memory rhs
+        Pairing.G1Point memory lhs,
+        Pairing.G1Point memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(lhs.length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
-        require(rhs.length == 2 * curveParams.fieldLength, "rhs should be equal to 2*fieldLength");
+        require(lhs.toBytes().length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
+        require(rhs.toBytes().length == 2 * curveParams.fieldLength, "rhs should be equal to 2*fieldLength");
     }
 
     function verifyCorrectG1MulDataLengths(
         CurveParams memory curveParams,
-        bytes memory lhs,
+        Pairing.G1Point memory lhs,
         bytes memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(lhs.length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
+        require(lhs.toBytes().length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
         require(rhs.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
     }
 
     function verifyCorrectG1MultiExpDataLengths(
         CurveParams memory curveParams,
-        bytes memory point,
+        Pairing.G1Point memory point,
         bytes memory scalar
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(point.length == 2 * curveParams.fieldLength, "point should be equal to 2*fieldLength");
+        require(point.toBytes().length == 2 * curveParams.fieldLength, "point should be equal to 2*fieldLength");
         require(scalar.length == curveParams.groupOrderLength, "scalar should be equal to groupOrderLength");
     }
 
@@ -126,60 +133,64 @@ library EIP1962 {
 
     function g1Add(
         CurveParams memory curveParams,
-        bytes memory lhs,
-        bytes memory rhs
+        Pairing.G1Point memory lhs,
+        Pairing.G1Point memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG1AddDataLengths(curveParams, lhs, rhs);
         bytes memory data;
+        bytes memory lhsBytes = lhs.toBytes();
+        bytes memory rhsBytes = lhs.toBytes();
         bytes memory opData = getG1OpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_G1_ADD);
         data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhs);
-        data = Bytes.concat(data, rhs);
+        data = Bytes.concat(data, lhsBytes);
+        data = Bytes.concat(data, rhsBytes);
         result = callEip1962(
             data,
-            1 + opData.length + lhs.length + rhs.length,
-            lhs.length
+            1 + opData.length + lhsBytes.length + rhsBytes.length,
+            lhsBytes.length
         );
     }
 
     function g1Mul(
         CurveParams memory curveParams,
-        bytes memory lhs,
+        Pairing.G1Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG1MulDataLengths(curveParams, lhs, rhs);
         bytes memory data;
+        bytes memory lhsBytes = lhs.toBytes();
         bytes memory opData = getG1OpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_G1_MUL);
         data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhs);
+        data = Bytes.concat(data, lhsBytes);
         data = Bytes.concat(data, rhs);
         result = callEip1962(
             data,
-            1 + opData.length + lhs.length + rhs.length,
-            lhs.length
+            1 + opData.length + lhsBytes.length + rhs.length,
+            lhsBytes.length
         );
     }
 
     function g1MultiExp(
         CurveParams memory curveParams,
         uint8 numPairs,
-        bytes memory point,
+        Pairing.G1Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
         verifyCorrectG1MultiExpDataLengths(curveParams, point, scalar);
         bytes memory data;
+        bytes memory pointBytes = point.toBytes();
         bytes memory opData = getG1OpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_G1_MULTIEXP);
         data = Bytes.concat(data, opData);
         data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
-        data = Bytes.concat(data, point);
+        data = Bytes.concat(data, pointBytes);
         data = Bytes.concat(data, scalar);
         result = callEip1962(
             data,
-            2 + opData.length + point.length + scalar.length,
-            point.length
+            2 + opData.length + pointBytes.length + scalar.length,
+            pointBytes.length
         );
     }
 
@@ -187,31 +198,31 @@ library EIP1962 {
 
     function verifyCorrectG2AddDataLengths(
         CurveParams memory curveParams,
-        bytes memory lhs,
-        bytes memory rhs
+        Pairing.G2Point memory lhs,
+        Pairing.G2Point memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(lhs.length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
-        require(rhs.length == curveParams.extensionDegree * curveParams.fieldLength, "rhs should be equal to extensionDegree * fieldLength");
+        require(lhs.toBytes().length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
+        require(rhs.toBytes().length == curveParams.extensionDegree * curveParams.fieldLength, "rhs should be equal to extensionDegree * fieldLength");
     }
 
     function verifyCorrectG2MulDataLengths(
         CurveParams memory curveParams,
-        bytes memory lhs,
+        Pairing.G2Point memory lhs,
         bytes memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(lhs.length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
+        require(lhs.toBytes().length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
         require(rhs.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
     }
 
     function verifyCorrectG2MultiExpDataLengths(
         CurveParams memory curveParams,
-        bytes memory point,
+        Pairing.G2Point memory point,
         bytes memory scalar
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(point.length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
+        require(point.toBytes().length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
         require(scalar.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
     }
 
@@ -232,60 +243,64 @@ library EIP1962 {
 
     function g2Add(
         CurveParams memory curveParams,
-        bytes memory lhs,
-        bytes memory rhs
+        Pairing.G2Point memory lhs,
+        Pairing.G2Point memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG2AddDataLengths(curveParams, lhs, rhs);
         bytes memory data;
+        bytes memory lhsBytes = lhs.toBytes();
+        bytes memory rhsBytes = lhs.toBytes();
         bytes memory opData = getG2OpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_G2_ADD);
         data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhs);
-        data = Bytes.concat(data, rhs);
+        data = Bytes.concat(data, lhsBytes);
+        data = Bytes.concat(data, rhsBytes);
         result = callEip1962(
             data,
-            1 + opData.length + lhs.length + rhs.length,
-            lhs.length
+            1 + opData.length + lhsBytes.length + rhsBytes.length,
+            lhsBytes.length
         );
     }
 
     function g2Mul(
         CurveParams memory curveParams,
-        bytes memory lhs,
+        Pairing.G1Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG2MulDataLengths(curveParams, lhs, rhs);
         bytes memory data;
+        bytes memory lhsBytes = lhs.toBytes();
         bytes memory opData = getG2OpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_G2_MUL);
         data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhs);
+        data = Bytes.concat(data, lhsBytes);
         data = Bytes.concat(data, rhs);
         result = callEip1962(
             data,
-            1 + opData.length + lhs.length + rhs.length,
-            lhs.length
+            1 + opData.length + lhsBytes.length + rhs.length,
+            lhsBytes.length
         );
     }
 
     function g2MultiExp(
         CurveParams memory curveParams,
         uint8 numPairs,
-        bytes memory point,
+        Pairing.G2Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
         verifyCorrectG2MultiExpDataLengths(curveParams, point, scalar);
         bytes memory data;
+        bytes memory pointBytes = point.toBytes();
         bytes memory opData = getG2OpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_G2_MULTIEXP);
         data = Bytes.concat(data, opData);
         data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
-        data = Bytes.concat(data, point);
+        data = Bytes.concat(data, pointBytes);
         data = Bytes.concat(data, scalar);
         result = callEip1962(
             data,
-            2 + opData.length + point.length + scalar.length,
-            point.length
+            2 + opData.length + pointBytes.length + scalar.length,
+            pointBytes.length
         );
     }
 
@@ -294,10 +309,10 @@ library EIP1962 {
     function verifyCorrectPairingPairsLengths(
         CurveParams memory curveParams,
         uint8 numPairs,
-        bytes memory pairs
+        Pair[] memory pairs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
-        require(pairs.length == 6 * curveParams.fieldLength * numPairs, "pairs should be equal to 6 * fieldLength * numPairs");
+        require(pairs.toBytes().length == 6 * curveParams.fieldLength * numPairs, "pairs should be equal to 6 * fieldLength * numPairs");
     }
 
     // MARK: - G2 opdata forming
@@ -323,7 +338,7 @@ library EIP1962 {
     function pairing(
         CurveParams memory curveParams,
         uint8 numPairs,
-        bytes memory pairs
+        Pair[] memory pairs
     ) public view returns (bytes memory result) {
         verifyCorrectPairingPairsLengths(curveParams, numPairs, pairs);
         bytes memory data;
@@ -331,7 +346,7 @@ library EIP1962 {
         data = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
         data = Bytes.concat(data, opData);
         data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
-        data = Bytes.concat(data, pairs);
+        data = Bytes.concat(data, pairs.toBytes());
         result = callEip1962(
             data,
             2 + opData.length + pairs.length,
