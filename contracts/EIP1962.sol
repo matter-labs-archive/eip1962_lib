@@ -20,7 +20,7 @@ library EIP1962 {
     // TODO: - ?
     uint8 internal constant CONTRACT_ID = 0x06;
 
-    // MARK: - G1 data lengths verifyCorrects
+    // Curve Params struct
 
     struct CurveParams {
         uint8 curveType;
@@ -41,7 +41,32 @@ library EIP1962 {
         uint8 sign;
     }
 
-    function verifyCorrectCurveParamsLengths(CurveParams memory params) public pure {
+    // Curves
+
+    function exampleCurveParams() public pure returns (CurveParams memory params) {
+        params = EIP1962.CurveParams({
+            curveType: 0x01,
+            fieldLength: 0x01,
+            baseFieldModulus: "0x01",
+            extensionDegree: 0x01,
+            a: "0x01",
+            b: "0x01",
+            groupOrderLength: 0x01,
+            groupOrder: "0x01",
+            fpNonResidue: "0x01",
+            mainSubgroupOrder: "0x01",
+            fp2NonResidue: "0x01",
+            fp6NonResidue: "0x01",
+            twistType: 0x01,
+            xLength: 0x01,
+            x: "0x01",
+            sign: 0x01
+        });
+    }
+    
+    // MARK: - Curve params lengths verifyCorrects
+
+    function verifyCorrectCurveParamsLengths(CurveParams memory params) internal pure {
         require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
         require(params.a.length == params.fieldLength, "a should be equal to fieldLength");
         require(params.b.length == params.fieldLength, "b should be equal to fieldLength");
@@ -54,11 +79,13 @@ library EIP1962 {
         require(params.x.length == params.xLength, "x should be equal to xLength");
     }
 
+    // MARK: - G1 data lengths verifyCorrects
+
     function verifyCorrectG1AddDataLengths(
         CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(lhs.length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
         require(rhs.length == 2 * curveParams.fieldLength, "rhs should be equal to 2*fieldLength");
@@ -68,7 +95,7 @@ library EIP1962 {
         CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(lhs.length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
         require(rhs.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
@@ -78,7 +105,7 @@ library EIP1962 {
         CurveParams memory curveParams,
         bytes memory point,
         bytes memory scalar
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(point.length == 2 * curveParams.fieldLength, "point should be equal to 2*fieldLength");
         require(scalar.length == curveParams.groupOrderLength, "scalar should be equal to groupOrderLength");
@@ -86,9 +113,7 @@ library EIP1962 {
 
     // MARK: - G1 opdata forming
 
-    function getG1OpDataInBytes(
-        CurveParams memory curveParams
-    ) public pure returns (bytes memory opData) {
+    function getG1OpDataInBytes(CurveParams memory curveParams) internal pure returns (bytes memory opData) {
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, curveParams.a);
@@ -164,7 +189,7 @@ library EIP1962 {
         CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(lhs.length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
         require(rhs.length == curveParams.extensionDegree * curveParams.fieldLength, "rhs should be equal to extensionDegree * fieldLength");
@@ -174,7 +199,7 @@ library EIP1962 {
         CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(lhs.length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
         require(rhs.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
@@ -184,7 +209,7 @@ library EIP1962 {
         CurveParams memory curveParams,
         bytes memory point,
         bytes memory scalar
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(point.length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
         require(scalar.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
@@ -192,7 +217,7 @@ library EIP1962 {
 
     // MARK: - G2 opdata forming
 
-    function getG2OpDataInBytes(CurveParams memory curveParams) public pure returns (bytes memory opData) {
+    function getG2OpDataInBytes(CurveParams memory curveParams) internal pure returns (bytes memory opData) {
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.extensionDegree));
@@ -270,14 +295,14 @@ library EIP1962 {
         CurveParams memory curveParams,
         uint8 numPairs,
         bytes memory pairs
-    ) public pure {
+    ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(pairs.length == 6 * curveParams.fieldLength * numPairs, "pairs should be equal to 6 * fieldLength * numPairs");
     }
 
     // MARK: - G2 opdata forming
 
-    function getPairingOpDataInBytes(CurveParams memory curveParams) public pure returns (bytes memory opData) {
+    function getPairingOpDataInBytes(CurveParams memory curveParams) internal pure returns (bytes memory opData) {
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -320,7 +345,7 @@ library EIP1962 {
         bytes memory input,
         uint inputLength,
         uint outLength
-    ) public view returns (bytes memory result) {
+    ) internal view returns (bytes memory result) {
         uint8 id = CONTRACT_ID;
         bytes memory out;
         assembly {
