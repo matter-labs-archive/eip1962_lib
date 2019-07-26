@@ -3,7 +3,7 @@ const chai = require('chai');
 const {deployContract, solidity} = require('ethereum-waffle');
 const ethers = require('ethers');
 
-const CURVE_CONTRACT = require('../build/ExampleCurve');
+const TEST_CONTRACT = require('../build/Example');
 
 chai.use(solidity);
 const {expect} = chai;
@@ -11,96 +11,73 @@ const {expect} = chai;
 describe('Test', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
-  let curve;
+  let test;
 
   beforeEach(async () => {
     provider.getBalance(wallet.address).then((balance) => {
       let etherString = ethers.utils.formatEther(balance);
       console.log("Wallet balance: " + etherString);
     })
-    curve = await deployContract(wallet, ExampleCurve, [], {
+    test = await deployContract(wallet, TEST_CONTRACT, [], {
       gasLimit: 8000000
     });
-    expect(curve.address).to.be.properAddress;
-    console.log("EIP lib address:" + curve.address);
+    expect(test.address).to.be.properAddress;
+    console.log("Test address:" + test.address);
   });
 
   it('G1 Add', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let g1Add = await contract.g1Add(
-      lhs,
-      rhs
-    );
-    console.log(g1Add);
+    let g1Add = await contract.testAddG1();
+    expect(g1Add).not.to.be.None;
   });
 
   it('G1 Mul', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let g1Mul = await contract.g1Mul(
-      lhs,
-      rhs
-    );
-    console.log(g1Mul);
+    let g1Mul = await contract.testMulG1();
+    expect(g1Mul).not.to.be.None;
   });
 
   it('G1 MultiExp', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let g1MultiExp = await contract.g1MultiExp(
-      numPairs,
-      lhs,
-      rhs
-    );
-    console.log(g1MultiExp);
+    let g1MultiExp = await contract.testMultiExpG1();
+    expect(g1MultiExp).not.to.be.None;
   });
 
   it('G2 Add', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let g2Add = await contract.g2Add(
-      lhs,
-      rhs
-    );
-    console.log(g2Add);
+    let g2Add = await contract.testAddG2();
+    expect(g2Add).not.to.be.None;
   });
 
   it('G2 Mul', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let g2Mul = await contract.g2Mul(
-      lhs,
-      rhs
-    );
-    console.log(g2Mul);
+    let g2Mul = await contract.testMulG2();
+    expect(g2Mul).not.to.be.None;
   });
 
   it('G2 MultiExp', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let g2MultiExp = await contract.g2MultiExp(
-      numPairs,
-      point,
-      scalar
-    );
-    console.log(g2MultiExp);
+    let g2MultiExp = await contract.testMultiExpG2();
+    expect(g2MultiExp).not.to.be.None;
   });
 
   it('Pairing', async () => {
-    let contractAddress = curve.address;
-    let contract = new ethers.Contract(contractAddress, CURVE_CONTRACT.abi, provider);
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let pairing = await contract.pairing(
-      numPairs,
-      pairs
-    );
-    console.log(pairing);
+    let pairing = await contract.testPairing();
+    expect(pairing).not.to.be.None;
   });
 });
