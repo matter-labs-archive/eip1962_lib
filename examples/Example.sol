@@ -2,7 +2,7 @@ pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
 import {EIP1962} from "../contracts/EIP1962.sol";
-import {BLS12} from "../examples/BLS12.sol";
+import {BLS12} from "../contracts/BLS12.sol";
 
 contract Example {
 
@@ -21,7 +21,7 @@ contract Example {
 
     function testMultiExpG1() public view {
         EIP1962.G1Point memory p = EIP1962.G1Point(1, 2);
-        bytes memory result = BLS12.g1MultiExp("0x03", p, "0x05");
+        bytes memory result = BLS12.g1MultiExp(3, p, "0x05");
         require(result, "Wrong inputs");
     }
 
@@ -60,10 +60,11 @@ contract Example {
             [4082367875863433681332203403145435568316851327593401208105741076214120093531,
              8495653923123431417604973247489272438418190587263600148770280649306958101930]
         );
-        bytes memory result = BLS12.g2MultiExp("0x03", p, "0x05");
+        bytes memory result = BLS12.g2MultiExp(3, p, "0x05");
         require(result, "Wrong inputs");
     }
 
+    // TODO: - not working
     function testPairing() public view {
         EIP1962.Pair[] memory pairs = EIP1962.Pair[
             EIP1962.Pair(

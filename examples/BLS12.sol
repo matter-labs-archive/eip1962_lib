@@ -14,9 +14,9 @@ library BLS12 {
 
     function g1Mul(
         EIP1962.G1Point memory lhs,
-        EIP1962.G1Point memory rhs
+        bytes memory rhs
     ) public view returns (bytes memory result) {
-        result = EIP1962.g1Add(EIP1962.bls12(), lhs, rhs);
+        result = EIP1962.g1Mul(EIP1962.bls12(), lhs, rhs);
     }
 
     function g1MultiExp(
