@@ -59,11 +59,15 @@ library EIP1962 {
     }
 
     function g1PointToBytes(G1Point memory point) internal pure returns (bytes memory result) {
-
+        result = Bytes.toBytesFromUInt(point.X);
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y));
     }
 
     function g2PointToBytes(G2Point memory point) internal pure returns (bytes memory result) {
-
+        result = Bytes.toBytesFromUInt(point.X[0]);
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.X[1]));
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[0]));
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[1]));
     }
 
     function pairsToBytes(Pair[] memory pairs) internal pure returns (bytes memory result) {

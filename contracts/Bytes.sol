@@ -2,6 +2,15 @@ pragma solidity ^0.5.1;
 
 library Bytes {
 
+    // TODO: - TEST
+    function toBytesFromUInt(uint self) internal pure returns (bytes memory bts) {
+        assembly {
+            bts := mload(0x10)
+            mstore(bts, 0x20)
+            mstore(add(bts, 0x20), self)
+        }
+    }
+
     // Compies uint8 'self' into a new 'bytes memory'.
     // Returns the newly created 'bytes memory'.
     function toBytesFromUInt8(uint8 self) internal pure returns (bytes memory bts) {
