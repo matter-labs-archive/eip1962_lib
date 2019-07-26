@@ -43,9 +43,14 @@ library EIP1962 {
 
     // Points
 
-    struct Pair {
+    struct G1Pair {
         G1Point p1;
         G1Point p2;
+    }
+
+    struct G2Pair {
+        G2Point p1;
+        G2Point p2;
     }
 
     struct G1Point {
@@ -70,10 +75,17 @@ library EIP1962 {
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[1]));
     }
 
-    function pairsToBytes(Pair[] memory pairs) internal pure returns (bytes memory result) {
+    function pairsG1ToBytes(G1Pair[] memory pairs) internal pure returns (bytes memory result) {
         for (uint i = 0; i < pairs.length; i++) {
             result = Bytes.concat(result, g1PointToBytes(pairs[i].p1));
             result = Bytes.concat(result, g1PointToBytes(pairs[i].p2));
+        }
+    }
+
+    function pairsG2ToBytes(G2Pair[] memory pairs) internal pure returns (bytes memory result) {
+        for (uint i = 0; i < pairs.length; i++) {
+            result = Bytes.concat(result, g2PointToBytes(pairs[i].p1));
+            result = Bytes.concat(result, g2PointToBytes(pairs[i].p2));
         }
     }
 
@@ -336,13 +348,23 @@ library EIP1962 {
 
     // MARK: - Pairing data lengths verifyCorrects
 
-    function verifyCorrectPairingPairsLengths(
+    function verifyCorrectPairingPairsG1Lengths(
         CurveParams memory curveParams,
-        Pair[] memory pairs
+        G1Pair[] memory pairs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         uint8 numPairs = uint8(pairs.length);
-        bytes memory data = pairsToBytes(pairs);
+        bytes memory data = pairsG1ToBytes(pairs);
+        require(data.length == 6 * curveParams.fieldLength * numPairs, "pairs should be equal to 6 * fieldLength * numPairs");
+    }
+
+    function verifyCorrectPairingPairsG2Lengths(
+        CurveParams memory curveParams,
+        G2Pair[] memory pairs
+    ) internal pure {
+        verifyCorrectCurveParamsLengths(curveParams);
+        uint8 numPairs = uint8(pairs.length);
+        bytes memory data = pairsG2ToBytes(pairs);
         require(data.length == 6 * curveParams.fieldLength * numPairs, "pairs should be equal to 6 * fieldLength * numPairs");
     }
 
@@ -366,14 +388,34 @@ library EIP1962 {
 
     // MARK: - Pairing operations
 
-    function pairing(
+    function pairingG1(
         CurveParams memory curveParams,
-        Pair[] memory pairs
+        G1Pair[] memory pairs
     ) public view returns (bytes memory result) {
         uint8 numPairs = uint8(pairs.length);
-        verifyCorrectPairingPairsLengths(curveParams, pairs);
+        verifyCorrectPairingPairsG1Lengths(curveParams, pairs);
         bytes memory data;
-        bytes memory pairsBytes = pairsToBytes(pairs);
+        bytes memory pairsBytes = pairsG1ToBytes(pairs);
+        bytes memory opData = getPairingOpDataInBytes(curveParams);
+        data = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
+        data = Bytes.concat(data, opData);
+        data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
+        data = Bytes.concat(data, pairsBytes);
+        result = callEip1962(
+            data,
+            2 + opData.length + pairsBytes.length,
+            1
+        );
+    }
+
+    function pairingG2(
+        CurveParams memory curveParams,
+        G2Pair[] memory pairs
+    ) public view returns (bytes memory result) {
+        uint8 numPairs = uint8(pairs.length);
+        verifyCorrectPairingPairsG2Lengths(curveParams, pairs);
+        bytes memory data;
+        bytes memory pairsBytes = pairsG2ToBytes(pairs);
         bytes memory opData = getPairingOpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
         data = Bytes.concat(data, opData);

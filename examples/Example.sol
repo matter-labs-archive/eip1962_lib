@@ -65,14 +65,35 @@ contract Example {
     }
 
     // TODO: - not working
-    function testPairing() public view {
+    function testPairingG1() public view {
         EIP1962.Pair[] memory pairs = EIP1962.Pair[
-            EIP1962.Pair(
-                EIP1962.G1Point(1, 2),
-                EIP1962.G1Point(1, 3)
-            )
+            EIP1962.PairG1({
+                p1: EIP1962.G1Point(1, 2),
+                p2: EIP1962.G1Point(1, 3)
+            })
         ];
-        bytes memory result = BLS12.pairing(pairs);
+        bytes memory result = BLS12.pairingG1(pairs);
+        require(result, "Wrong inputs");
+    }
+
+    function testPairingG2() public view {
+        EIP1962.Pair[] memory pairs = EIP1962.Pair[
+            EIP1962.PairG2({
+                p1: EIP1962.G2PointG2Point(
+                    [11559732032986387107991004021392285783925812861821192530917403151452391805634,
+                    10857046999023057135944570762232829481370756359578518086990519993285655852781],
+                    [4082367875863433681332203403145435568316851327593401208105741076214120093531,
+                    8495653923123431417604973247489272438418190587263600148770280649306958101930]
+                ),
+                p2: EIP1962.G2PointG2Point(
+                    [11559732032986387107991004021392285783925812861821192530917403151452391805634,
+                    10857046999023057135944570762232829481370756359578518086990519993285655852781],
+                    [4082367875863433681332203403145435568316851327593401208105741076214120093531,
+                    8495653923123431417604973247489272438418190587263600148770280649306958101930]
+                )
+            })
+        ];
+        bytes memory result = BLS12.pairingG2(pairs);
         require(result, "Wrong inputs");
     }
 
