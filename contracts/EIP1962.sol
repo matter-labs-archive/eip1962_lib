@@ -2,7 +2,6 @@ pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
 import {Bytes} from "../contracts/Bytes.sol";
-import {Pairing} from "../contracts/Pairing.sol";
 
 library EIP1962 {
 
@@ -43,8 +42,18 @@ library EIP1962 {
     }
 
     struct Pair {
-        Pairing.G1Point p1;
-        Pairing.G1Point p2;
+        G1Point p1;
+        G1Point p2;
+    }
+
+    struct G1Point {
+        uint X;
+        uint Y;
+    }
+    
+    struct G2Point {
+        uint[2] X;
+        uint[2] Y;
     }
 
     // Curves list
@@ -90,8 +99,8 @@ library EIP1962 {
 
     function verifyCorrectG1AddDataLengths(
         CurveParams memory curveParams,
-        Pairing.G1Point memory lhs,
-        Pairing.G1Point memory rhs
+        G1Point memory lhs,
+        G1Point memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(lhs.toBytes().length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
@@ -100,7 +109,7 @@ library EIP1962 {
 
     function verifyCorrectG1MulDataLengths(
         CurveParams memory curveParams,
-        Pairing.G1Point memory lhs,
+        G1Point memory lhs,
         bytes memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
@@ -110,7 +119,7 @@ library EIP1962 {
 
     function verifyCorrectG1MultiExpDataLengths(
         CurveParams memory curveParams,
-        Pairing.G1Point memory point,
+        G1Point memory point,
         bytes memory scalar
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
@@ -133,8 +142,8 @@ library EIP1962 {
 
     function g1Add(
         CurveParams memory curveParams,
-        Pairing.G1Point memory lhs,
-        Pairing.G1Point memory rhs
+        G1Point memory lhs,
+        G1Point memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG1AddDataLengths(curveParams, lhs, rhs);
         bytes memory data;
@@ -154,7 +163,7 @@ library EIP1962 {
 
     function g1Mul(
         CurveParams memory curveParams,
-        Pairing.G1Point memory lhs,
+        G1Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG1MulDataLengths(curveParams, lhs, rhs);
@@ -175,7 +184,7 @@ library EIP1962 {
     function g1MultiExp(
         CurveParams memory curveParams,
         uint8 numPairs,
-        Pairing.G1Point memory point,
+        G1Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
         verifyCorrectG1MultiExpDataLengths(curveParams, point, scalar);
@@ -198,8 +207,8 @@ library EIP1962 {
 
     function verifyCorrectG2AddDataLengths(
         CurveParams memory curveParams,
-        Pairing.G2Point memory lhs,
-        Pairing.G2Point memory rhs
+        G2Point memory lhs,
+        G2Point memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(lhs.toBytes().length == curveParams.extensionDegree * curveParams.fieldLength, "lhs should be equal to extensionDegree * fieldLength");
@@ -208,7 +217,7 @@ library EIP1962 {
 
     function verifyCorrectG2MulDataLengths(
         CurveParams memory curveParams,
-        Pairing.G2Point memory lhs,
+        G2Point memory lhs,
         bytes memory rhs
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
@@ -218,7 +227,7 @@ library EIP1962 {
 
     function verifyCorrectG2MultiExpDataLengths(
         CurveParams memory curveParams,
-        Pairing.G2Point memory point,
+        G2Point memory point,
         bytes memory scalar
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
@@ -243,8 +252,8 @@ library EIP1962 {
 
     function g2Add(
         CurveParams memory curveParams,
-        Pairing.G2Point memory lhs,
-        Pairing.G2Point memory rhs
+        G2Point memory lhs,
+        G2Point memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG2AddDataLengths(curveParams, lhs, rhs);
         bytes memory data;
@@ -264,7 +273,7 @@ library EIP1962 {
 
     function g2Mul(
         CurveParams memory curveParams,
-        Pairing.G1Point memory lhs,
+        G1Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         verifyCorrectG2MulDataLengths(curveParams, lhs, rhs);
@@ -285,7 +294,7 @@ library EIP1962 {
     function g2MultiExp(
         CurveParams memory curveParams,
         uint8 numPairs,
-        Pairing.G2Point memory point,
+        G2Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
         verifyCorrectG2MultiExpDataLengths(curveParams, point, scalar);
