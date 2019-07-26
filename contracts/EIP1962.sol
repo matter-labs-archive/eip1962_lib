@@ -337,7 +337,6 @@ library EIP1962 {
 
     function pairing(
         CurveParams memory curveParams,
-        uint8 numPairs,
         Pair[] memory pairs
     ) public view returns (bytes memory result) {
         verifyCorrectPairingPairsLengths(curveParams, numPairs, pairs);
@@ -345,7 +344,7 @@ library EIP1962 {
         bytes memory opData = getPairingOpDataInBytes(curveParams);
         data = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
         data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
+        data = Bytes.concat(data, Bytes.toBytesFromUInt8(uint8(pairs.length)));
         data = Bytes.concat(data, pairs.toBytes());
         result = callEip1962(
             data,

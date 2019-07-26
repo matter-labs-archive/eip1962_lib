@@ -51,7 +51,6 @@ library BLS12 {
     }
 
     function pairing(
-        uint8 numPairs,
         EIP1962.Pair[] memory pairs
     ) public view returns (bytes memory result) {
         result = EIP1962.pairing(EIP1962.bls12(), numPairs, pairs);
