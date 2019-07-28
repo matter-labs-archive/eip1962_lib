@@ -49,16 +49,10 @@ library BLS12 {
         result = EIP1962.g2MultiExp(EIP1962.bls12(), numPairs, point, scalar);
     }
 
-    function pairingG1(
-        EIP1962.G1Pair[] memory pairs
+    function pairing(
+        EIP1962.Pair[] memory pairs
     ) public view returns (bytes memory result) {
-        result = EIP1962.pairingG1(EIP1962.bls12(), pairs);
-    }
-
-    function pairingG2(
-        EIP1962.G2Pair[] memory pairs
-    ) public view returns (bytes memory result) {
-        result = EIP1962.pairingG2(EIP1962.bls12(), pairs);
+        result = EIP1962.pairing(EIP1962.bls12(), pairs);
     }
 
 }
