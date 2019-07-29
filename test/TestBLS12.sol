@@ -7,111 +7,117 @@ import {HelpersForTests} from "../contracts/HelpersForTests.sol";
 
 contract TestBLS12 {
 
-    function testAddG1() public view {
+    function testAddG1(uint p1x, uint p1y,
+                       uint p2x, uint p2y,
+                       bytes memory correctResult) public view returns (bool) {
         EIP1962.G1Point memory p1 = EIP1962.G1Point({
-            X: 1,
-            Y: 2
+            X: p1x,
+            Y: p1y
         });
         EIP1962.G1Point memory p2 = EIP1962.G1Point({
-            X: 3,
-            Y: 4
+            X: p2x,
+            Y: p2y
         });
         bytes memory result = BLS12.g1Add(p1, p2);
-        require(
-            HelpersForTests.equal(result, bytes("0x01")),
-            "Wrong inputs in testAddG1"
-        );
+        return HelpersForTests.equal(result, correctResult);
     }
 
-    function testMulG1() public view {
+    function testMulG1(uint px, uint py,
+                       bytes memory factor,
+                       bytes memory correctResult) public view returns (bool) {
         EIP1962.G1Point memory p = EIP1962.G1Point({
-            X: 1,
-            Y: 2
+            X: px,
+            Y: py
         });
-        bytes memory result = BLS12.g1Mul(p, "0x02");
-        require(
-            HelpersForTests.equal(result, bytes("0x01")),
-            "Wrong inputs in testMulG1"
-        );
+        bytes memory result = BLS12.g1Mul(p, factor);
+        return HelpersForTests.equal(result, correctResult);
     }
 
-    function testMultiExpG1() public view {
+    function testMultiExpG1(uint8 numPairs,
+                            uint px, uint py,
+                            bytes memory order,
+                            bytes memory correctResult) public view returns (bool) {
         EIP1962.G1Point memory p = EIP1962.G1Point({
-            X: 1,
-            Y: 2
+            X: px,
+            Y: py
         });
-        bytes memory result = BLS12.g1MultiExp(3, p, "0x05");
-        require(
-            HelpersForTests.equal(result, bytes("0x01")),
-            "Wrong inputs in testMultiExpG1"
-        );
+        bytes memory result = BLS12.g1MultiExp(numPairs, p, order);
+        return HelpersForTests.equal(result, correctResult);
     }
 
-    function testAddG2() public view {
+    function testAddG2(uint p1x0, uint p1x1,
+                       uint p1y0, uint p1y1,
+                       uint p2x0, uint p2x1,
+                       uint p2y0, uint p2y1,
+                       bytes memory correctResult) public view returns (bool) {
         EIP1962.G2Point memory p1 = EIP1962.G2Point({
-            X: [11559732032986387107991004021392285783925812861821192530917403151452391805634,
-             10857046999023057135944570762232829481370756359578518086990519993285655852781],
-            Y: [4082367875863433681332203403145435568316851327593401208105741076214120093531,
-             8495653923123431417604973247489272438418190587263600148770280649306958101930]
+            X: [p1x0, p1x1],
+            Y: [p1y0, p1y1]
         });
         EIP1962.G2Point memory p2 = EIP1962.G2Point({
-            X: [11559732032986387107991004021392285783925812861821192530917403151452391805634,
-             10857046999023057135944570762232829481370756359578518086990519993285655852781],
-            Y: [4082367875863433681332203403145435568316851327593401208105741076214120093531,
-             8495653923123431417604973247489272438418190587263600148770280649306958101930]
+            X: [p2x0, p2x1],
+            Y: [p2y0, p2y1]
         });
         bytes memory result = BLS12.g2Add(p1, p2);
-        require(
-            HelpersForTests.equal(result, bytes("0x01")),
-            "Wrong inputs in testAddG2"
-        );
+        return HelpersForTests.equal(result, correctResult);
     }
 
-    function testMulG2() public view {
+    function testMulG2(uint px0, uint px1,
+                       uint py0, uint py1,
+                       bytes memory factor,
+                       bytes memory correctResult) public view returns (bool) {
         EIP1962.G2Point memory p = EIP1962.G2Point({
-            X: [11559732032986387107991004021392285783925812861821192530917403151452391805634,
-             10857046999023057135944570762232829481370756359578518086990519993285655852781],
-            Y: [4082367875863433681332203403145435568316851327593401208105741076214120093531,
-             8495653923123431417604973247489272438418190587263600148770280649306958101930]
+            X: [px0, px1],
+            Y: [py0, py1]
         });
-        bytes memory result = BLS12.g2Mul(p, "0x02");
-        require(
-            HelpersForTests.equal(result, bytes("0x01")),
-            "Wrong inputs in testMulG2"
-        );
+        bytes memory result = BLS12.g2Mul(p, factor);
+        return HelpersForTests.equal(result, correctResult);
     }
 
-    function testMultiExpG2() public view {
+    function testMultiExpG2(uint8 numPairs,
+                            uint px0, uint px1,
+                            uint py0, uint py1,
+                            bytes memory order,
+                            bytes memory correctResult) public view returns (bool) {
         EIP1962.G2Point memory p = EIP1962.G2Point({
-            X: [11559732032986387107991004021392285783925812861821192530917403151452391805634,
-             10857046999023057135944570762232829481370756359578518086990519993285655852781],
-            Y: [4082367875863433681332203403145435568316851327593401208105741076214120093531,
-             8495653923123431417604973247489272438418190587263600148770280649306958101930]
+            X: [px0, px1],
+            Y: [py0, py1]
         });
-        bytes memory result = BLS12.g2MultiExp(3, p, "0x05");
-        require(
-            HelpersForTests.equal(result, bytes("0x01")),
-            "Wrong inputs in testMultiExpG2"
-        );
+        bytes memory result = BLS12.g2MultiExp(numPairs, p, order);
+        return HelpersForTests.equal(result, correctResult);
     }
 
-    // function testPairing() public view {
-    //     EIP1962.Pair[1] storage pairs = EIP1962.Pair[
-    //         EIP1962.Pair({
-    //             g1p: EIP1962.G1Point({
-    //                 X: 1,
-    //                 Y: 2
-    //             }),
-    //             g2p: EIP1962.G2Point({
-    //                 X: [11559732032986387107991004021392285783925812861821192530917403151452391805634,
-    //                 10857046999023057135944570762232829481370756359578518086990519993285655852781],
-    //                 Y: [4082367875863433681332203403145435568316851327593401208105741076214120093531,
-    //                 8495653923123431417604973247489272438418190587263600148770280649306958101930]
-    //             })
-    //         })
-    //     ];
-    //     bytes memory result = BLS12.pairing(pairs);
-    //     require(HelpersForTests.equal(result, bytes("0x01")), "Wrong inputs");
+    function testPairing(uint[2] memory g1p1,
+                         uint[4] memory g2p1,
+                         uint[2] memory g1p2,
+                         uint[4] memory g2p2,
+                         bytes memory correctResult) public view returns (bool) {
+        EIP1962.Pair memory pair1 = EIP1962.Pair({
+            g1p: EIP1962.G1Point({
+                X: g1p1[0],
+                Y: g1p1[1]
+            }),
+            g2p: EIP1962.G2Point({
+                X: [g2p1[0], g2p1[1]],
+                Y: [g2p1[2], g2p1[3]]
+            })
+        });
+        EIP1962.Pair memory pair2 = EIP1962.Pair({
+            g1p: EIP1962.G1Point({
+                X: g1p2[0],
+                Y: g1p2[1]
+            }),
+            g2p: EIP1962.G2Point({
+                X: [g2p2[0], g2p2[1]],
+                Y: [g2p2[2], g2p2[3]]
+            })
+        });
+        EIP1962.Pair[] memory resPairs = new EIP1962.Pair[](2);
+        resPairs[0] = pair1;
+        resPairs[1] = pair2;
+
+        bytes memory result = BLS12.pairing(resPairs);
+        return HelpersForTests.equal(result, correctResult);
     }
 
 }
