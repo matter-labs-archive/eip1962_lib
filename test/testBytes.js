@@ -12,76 +12,64 @@ describe('Test Bytes', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
   let test;
+  let contract;
 
   beforeEach(async () => {
     test = await deployContract(wallet, TEST_CONTRACT, [], {
-      gasLimit: 8000000
+      gasLimit: 4700000
     });
     expect(test.address).to.be.properAddress;
     console.log("Test address:" + test.address);
+    contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
   });
 
   it('Equal', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testEqual();
-    expect(concat).not.to.be.None;
+    let result = await contract.testEqual(["0x00", "0xaa", "0xff"], ["0x00", "0xaa", "0xff"]);
+    expect(result).to.eq(true);
   });
 
-  it('Not equal 1', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testNotEqual1();
-    expect(concat).not.to.be.None;
+  it('Not equal', async () => {
+    let result = await contract.testEqual(["0x00", "0xaa", "0xf1"], ["0x00", "0xaa", "0xff"]);
+    expect(result).to.eq(false);
   });
 
-  it('Not equal 2', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testNotEqual2();
-    expect(concat).not.to.be.None;
+  it('Slice correct', async () => {
+    let result = await contract.testSliceCorrect(["0x00", "0xaa", "0xf1", "0xab", "0x51"], 2, 2, ["0xf1", "0xab"]);
+    expect(result).to.eq(true);
   });
 
-  it('Not equal 3', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testNotEqual3();
-    expect(concat).not.to.be.None;
+  it('Slice not correct', async () => {
+    let result = await contract.testSliceCorrect(["0x00", "0xaa", "0xf1", "0xab", "0x51"], 2, 2, ["0xaa", "0xf1"]);
+    expect(result).to.eq(false);
   });
 
-  it('Not equal 4', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testNotEqual4();
-    expect(concat).not.to.be.None;
+  it('To bytes from uint correct', async () => {
+    let result = await contract.testToBytesFromUIntSuccess(257, 4, ["0x00",  "0x00",  "0x01",  "0x01"]);
+    expect(result).to.eq(true);
   });
 
-  it('Not equal 5', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testNotEqual5();
-    expect(concat).not.to.be.None;
+  it('To bytes from uint not correct', async () => {
+    let result = await contract.testToBytesFromUIntCorrect(259, 4, ["0x00",  "0x00",  "0x01",  "0x01"]);
+    expect(result).to.eq(false);
   });
 
-  it('Concat equal', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
-
-    let concat = await contract.testConcatEqual();
-    expect(concat).not.to.be.None;
+  it('To bytes from uint8 correct', async () => {
+    let result = await contract.testToBytesFromUInt8Success(128, ["0x80"]);
+    expect(result).to.eq(true);
   });
 
-  it('Concat not equal', async () => {
-    let contractAddress = test.address;
-    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+  it('To bytes from uint8 not correct', async () => {
+    let result = await contract.testToBytesFromUInt8Correct(128, ["0x81"]);
+    expect(result).to.eq(false);
+  });
 
-    let concat = await contract.testConcatNotEqual();
-    expect(concat).not.to.be.None;
+  it('Concat correct', async () => {
+    let result = await contract.testConcatEqual(["0x02", "0x82"], ["0x12", "0xf2"], ["0x02", "0x82", "0x12", "0xf2"]);
+    expect(result).to.eq(true);
+  });
+
+  it('Concat not correct', async () => {
+    let result = await contract.testConcatEqual(["0x02", "0x82"], ["0x12", "0xf2"], ["0x01", "0x82", "0x12", "0xf2"]);
+    expect(result).to.eq(false);
   });
 });

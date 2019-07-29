@@ -2,15 +2,23 @@ pragma solidity ^0.5.1;
 
 library HelpersForTests {
 
-    // Original: https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol#L392
-    function equal(bytes memory _preBytes, bytes memory _postBytes) internal pure returns (bool) {
-        bool success = true;
+    // Original: https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/AssertBytes.sol#L29
+    // Function: equal(bytes memory, bytes memory)
+    // Assert that two tightly packed bytes arrays are equal.
+    // Params:
+    //     A (bytes) - The first bytes.
+    //     B (bytes) - The second bytes.
+    //     message (string) - A message that is sent if the assertion fails.
+    // Returns:
+    //     result (bool) - The result.
+    function equal(bytes memory _a, bytes memory _b) internal pure returns (bool) {
+        bool returnBool = true;
 
         assembly {
-            let length := mload(_preBytes)
+            let length := mload(_a)
 
             // if lengths don't match the arrays are not equal
-            switch eq(length, mload(_postBytes))
+            switch eq(length, mload(_b))
             case 1 {
                 // cb is a circuit breaker in the for loop since there's
                 //  no said feature for inline assembly loops
@@ -18,11 +26,11 @@ library HelpersForTests {
                 // cb = 0 - break
                 let cb := 1
 
-                let mc := add(_preBytes, 0x20)
+                let mc := add(_a, 0x20)
                 let end := add(mc, length)
 
                 for {
-                    let cc := add(_postBytes, 0x20)
+                    let cc := add(_b, 0x20)
                 // the next line is the loop condition:
                 // while(uint(mc < end) + cb == 2)
                 } eq(add(lt(mc, end), cb), 2) {
@@ -32,17 +40,17 @@ library HelpersForTests {
                     // if any of these checks fails then arrays are not equal
                     if iszero(eq(mload(mc), mload(cc))) {
                         // unsuccess:
-                        success := 0
+                        returnBool := 0
                         cb := 0
                     }
                 }
             }
             default {
                 // unsuccess:
-                success := 0
+                returnBool := 0
             }
         }
 
-        return success;
+        return returnBool;
     }
 }

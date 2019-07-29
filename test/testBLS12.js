@@ -17,7 +17,7 @@ describe('Test BLS12', () => {
     provider.getBalance(wallet.address).then((balance) => {
       let etherString = ethers.utils.formatEther(balance);
       console.log("Wallet balance: " + etherString);
-    })
+    });
     test = await deployContract(wallet, TEST_CONTRACT, [], {
       gasLimit: 8000000
     });

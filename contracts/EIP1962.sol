@@ -57,32 +57,32 @@ library EIP1962 {
 
     // Compies G1 point into a new bytes memory.
     // Returns the newly created bytes memory.
-    function g1PointToBytes(G1Point memory point) internal pure returns (bytes memory result) {
-        result = Bytes.toBytesFromUInt(point.X);
-        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y));
+    function g1PointToBytes(G1Point memory point, uint pointLength) internal pure returns (bytes memory result) {
+        result = Bytes.toBytesFromUInt(point.X, pointLength/2);
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y, pointLength/2));
     }
 
     // Compies G2 point into a new bytes memory.
     // Returns the newly created bytes memory.
-    function g2PointToBytes(G2Point memory point) internal pure returns (bytes memory result) {
-        result = Bytes.toBytesFromUInt(point.X[0]);
-        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.X[1]));
-        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[0]));
-        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[1]));
+    function g2PointToBytes(G2Point memory point, uint pointLength) internal pure returns (bytes memory result) {
+        result = Bytes.toBytesFromUInt(point.X[0], pointLength/4);
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.X[1], pointLength/4));
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[0], pointLength/4));
+        result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[1], pointLength/4));
     }
 
     // Compies points pair into a new bytes memory.
     // Returns the newly created bytes memory.
-    function pairToBytes(Pair memory pair) internal pure returns (bytes memory result) {
-        result = g1PointToBytes(pair.g1p);
-        result = Bytes.concat(result, g2PointToBytes(pair.g2p));
+    function pairToBytes(Pair memory pair, uint g1PointLength, uint g2PointLength) internal pure returns (bytes memory result) {
+        result = g1PointToBytes(pair.g1p, g1PointLength);
+        result = Bytes.concat(result, g2PointToBytes(pair.g2p, g2PointLength));
     }
 
     // Compies points pairs array into a new bytes memory.
     // Returns the newly created bytes memory.
-    function pairsArrayToBytes(Pair[] memory pairs) internal pure returns (bytes memory result) {
+    function pairsArrayToBytes(Pair[] memory pairs, uint g1PointLength, uint g2PointLength) internal pure returns (bytes memory result) {
         for (uint i = 0; i < pairs.length; i++) {
-            result = Bytes.concat(result, pairToBytes(pairs[i]));
+            result = Bytes.concat(result, pairToBytes(pairs[i], g1PointLength, g2PointLength));
         }
     }
 
@@ -194,8 +194,8 @@ library EIP1962 {
         G1Point memory rhs
     ) public view returns (bytes memory result) {
 
-        bytes memory lhsBytes = g1PointToBytes(lhs);
-        bytes memory rhsBytes = g1PointToBytes(rhs);
+        bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
+        bytes memory rhsBytes = g1PointToBytes(rhs, 2*curveParams.fieldLength);
 
         verifyCorrectG1AddDataLengths(curveParams, lhsBytes, rhsBytes);
 
@@ -226,7 +226,7 @@ library EIP1962 {
         bytes memory rhs
     ) public view returns (bytes memory result) {
 
-        bytes memory lhsBytes = g1PointToBytes(lhs);
+        bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
 
         verifyCorrectG1MulDataLengths(curveParams, lhsBytes, rhs);
 
@@ -259,7 +259,7 @@ library EIP1962 {
         bytes memory scalar
     ) public view returns (bytes memory result) {
 
-        bytes memory pointBytes = g1PointToBytes(point);
+        bytes memory pointBytes = g1PointToBytes(point, 2*curveParams.fieldLength);
 
         verifyCorrectG1MultiExpDataLengths(curveParams, pointBytes, scalar);
 
@@ -370,8 +370,8 @@ library EIP1962 {
         G2Point memory lhs,
         G2Point memory rhs
     ) public view returns (bytes memory result) {
-        bytes memory lhsBytes = g2PointToBytes(lhs);
-        bytes memory rhsBytes = g2PointToBytes(rhs);
+        bytes memory lhsBytes = g2PointToBytes(lhs, curveParams.extensionDegree*curveParams.fieldLength);
+        bytes memory rhsBytes = g2PointToBytes(rhs, curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2AddDataLengths(curveParams, lhsBytes, rhsBytes);
 
@@ -401,7 +401,7 @@ library EIP1962 {
         G2Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
-        bytes memory lhsBytes = g2PointToBytes(lhs);
+        bytes memory lhsBytes = g2PointToBytes(lhs, curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MulDataLengths(curveParams, lhsBytes, rhs);
 
@@ -433,7 +433,7 @@ library EIP1962 {
         G2Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
-        bytes memory pointBytes = g2PointToBytes(point);
+        bytes memory pointBytes = g2PointToBytes(point, curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MultiExpDataLengths(curveParams, pointBytes, scalar);
 
@@ -500,7 +500,7 @@ library EIP1962 {
         Pair[] memory pairs
     ) public view returns (bytes memory result) {
         uint8 numPairs = uint8(pairs.length);
-        bytes memory pairsBytes = pairsArrayToBytes(pairs);
+        bytes memory pairsBytes = pairsArrayToBytes(pairs, 2*curveParams.fieldLength, curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectPairingPairsLengths(curveParams, pairsBytes, numPairs);
 
