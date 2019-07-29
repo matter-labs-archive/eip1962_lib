@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import {EIP1962} from "../contracts/EIP1962.sol";
 import {BLS12} from "../contracts/BLS12.sol";
-import {TestHelpers} from "../contracts/TestHelpers.sol";
+import {HelpersForTests} from "../contracts/HelpersForTests.sol";
 
 contract TestBLS12 {
 
@@ -18,7 +18,7 @@ contract TestBLS12 {
         });
         bytes memory result = BLS12.g1Add(p1, p2);
         require(
-            TestHelpers.equal(result, bytes("0x01")),
+            HelpersForTests.equal(result, bytes("0x01")),
             "Wrong inputs in testAddG1"
         );
     }
@@ -30,7 +30,7 @@ contract TestBLS12 {
         });
         bytes memory result = BLS12.g1Mul(p, "0x02");
         require(
-            TestHelpers.equal(result, bytes("0x01")),
+            HelpersForTests.equal(result, bytes("0x01")),
             "Wrong inputs in testMulG1"
         );
     }
@@ -42,7 +42,7 @@ contract TestBLS12 {
         });
         bytes memory result = BLS12.g1MultiExp(3, p, "0x05");
         require(
-            TestHelpers.equal(result, bytes("0x01")),
+            HelpersForTests.equal(result, bytes("0x01")),
             "Wrong inputs in testMultiExpG1"
         );
     }
@@ -62,7 +62,7 @@ contract TestBLS12 {
         });
         bytes memory result = BLS12.g2Add(p1, p2);
         require(
-            TestHelpers.equal(result, bytes("0x01")),
+            HelpersForTests.equal(result, bytes("0x01")),
             "Wrong inputs in testAddG2"
         );
     }
@@ -76,7 +76,7 @@ contract TestBLS12 {
         });
         bytes memory result = BLS12.g2Mul(p, "0x02");
         require(
-            TestHelpers.equal(result, bytes("0x01")),
+            HelpersForTests.equal(result, bytes("0x01")),
             "Wrong inputs in testMulG2"
         );
     }
@@ -90,7 +90,7 @@ contract TestBLS12 {
         });
         bytes memory result = BLS12.g2MultiExp(3, p, "0x05");
         require(
-            TestHelpers.equal(result, bytes("0x01")),
+            HelpersForTests.equal(result, bytes("0x01")),
             "Wrong inputs in testMultiExpG2"
         );
     }
@@ -111,7 +111,7 @@ contract TestBLS12 {
     //         })
     //     ];
     //     bytes memory result = BLS12.pairing(pairs);
-    //     require(TestHelpers.equal(result, bytes("0x01")), "Wrong inputs");
+    //     require(HelpersForTests.equal(result, bytes("0x01")), "Wrong inputs");
     }
 
 }

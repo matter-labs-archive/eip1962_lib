@@ -19,7 +19,8 @@ library Bytes {
         bts[0] = byte(self);
     }
 
-    // Original: https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol#L13
+    // Original source code: https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol#L13
+    // Source code tests: https://github.com/GNSPS/solidity-bytes-utils/blob/master/test/TestBytesLib1.sol#L67
     // Concatenate bytes arrays in memory
     // Returns the newly created 'bytes memory'.
     function concat(

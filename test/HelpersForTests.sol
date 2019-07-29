@@ -1,6 +1,6 @@
 pragma solidity ^0.5.1;
 
-library TestHelpers {
+library HelpersForTests {
 
     // Original: https://github.com/GNSPS/solidity-bytes-utils/blob/master/contracts/BytesLib.sol#L392
     function equal(bytes memory _preBytes, bytes memory _postBytes) internal pure returns (bool) {
