@@ -21,19 +21,67 @@ describe('Test Bytes', () => {
     console.log("Test address:" + test.address);
   });
 
-  it('Concat success', async () => {
+  it('Equal', async () => {
     let contractAddress = test.address;
     let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let concat = await contract.testConcatSuccess();
+    let concat = await contract.testEqual();
     expect(concat).not.to.be.None;
   });
 
-  it('Concat fail', async () => {
+  it('Not equal 1', async () => {
     let contractAddress = test.address;
     let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let concat = await contract.testConcatFail();
+    let concat = await contract.testNotEqual1();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Not equal 2', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testNotEqual2();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Not equal 3', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testNotEqual3();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Not equal 4', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testNotEqual4();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Not equal 5', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testNotEqual5();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Concat equal', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testConcatEqual();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Concat not equal', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testConcatNotEqual();
     expect(concat).not.to.be.None;
   });
 });
