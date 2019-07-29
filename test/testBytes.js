@@ -21,11 +21,19 @@ describe('Test Bytes', () => {
     console.log("Test address:" + test.address);
   });
 
-  it('Concat', async () => {
+  it('Concat success', async () => {
     let contractAddress = test.address;
     let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
 
-    let concat = await contract.testConcat();
+    let concat = await contract.testConcatSuccess();
+    expect(concat).not.to.be.None;
+  });
+
+  it('Concat fail', async () => {
+    let contractAddress = test.address;
+    let contract = new ethers.Contract(contractAddress, TEST_CONTRACT.abi, provider);
+
+    let concat = await contract.testConcatFail();
     expect(concat).not.to.be.None;
   });
 });
