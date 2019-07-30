@@ -86,28 +86,6 @@ library EIP1962 {
         }
     }
 
-    // MARK: - Prebuilt curves list
-    function bls12() public pure returns (CurveParams memory params) {
-        params = EIP1962.CurveParams({
-            curveType: 0x01,
-            fieldLength: 0x01,
-            baseFieldModulus: "0x01",
-            extensionDegree: 0x01,
-            a: "0x01",
-            b: "0x01",
-            groupOrderLength: 0x01,
-            groupOrder: "0x01",
-            fpNonResidue: "0x01",
-            mainSubgroupOrder: "0x01",
-            fp2NonResidue: "0x01",
-            fp6NonResidue: "0x01",
-            twistType: 0x01,
-            xLength: 0x01,
-            x: "0x01",
-            sign: 0x01
-        });
-    }
-
     // Verifies the correctness of the curve parameters.
     function verifyCorrectCurveParamsLengths(CurveParams memory params) internal pure {
         require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
