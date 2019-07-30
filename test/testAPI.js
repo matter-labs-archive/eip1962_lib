@@ -3,12 +3,12 @@ const chai = require('chai');
 const {deployContract, solidity} = require('ethereum-waffle');
 const ethers = require('ethers');
 
-const TEST_CONTRACT = require('../build/TestBLS12');
+const TEST_CONTRACT = require('../build/TestAPI');
 
 chai.use(solidity);
 const {expect} = chai;
 
-describe('Test BLS12', () => {
+describe('Test API', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
   let test;
@@ -19,7 +19,7 @@ describe('Test BLS12', () => {
       let etherString = ethers.utils.formatEther(balance);
       console.log("Wallet balance: " + etherString);
     });
-    test = await deployContract(wallet, TEST_CONTRACT, [], {
+    test = await deployContract(wallet, TEST_CONTRACT, [contract.CommonTypes.CurveTypes.Bls12_381], {
       gasLimit: 8000000
     });
     expect(test.address).to.be.properAddress;

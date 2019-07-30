@@ -1,42 +1,33 @@
 pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
-import {EIP1962} from "../contracts/EIP1962.sol";
+import {EIP1962_CoreAPI} from "../contracts/EIP1962_CoreAPI.sol";
 import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
+import {CommonTypes} from "../contracts/CommonTypes.sol";
 
-contract EIP1962API {
-
-    // Enum describes possible curves.
-    // 'Custom' is user defined curve.
-    // 'Undefined' curve is undefined;
-    enum CurveTypes {
-        Bn256,
-        Bls12_381,
-        Custom,
-        Undefined
-    }
+contract EIP1962_PublicAPI {
 
     // Current curve parameters
-    EIP1962.CurveParams curveParams;
+    CommonTypes.CurveParams curveParams;
 
     // Current curve
-    CurveTypes curveType;
+    CommonTypes.CurveTypes curveType;
 
     // Constructor input is curve type.
     // If _curveType is Custom then curveType will be setted to Undefined.
-    constructor(CurveTypes _curveType) public {
-        if (_curveType == CurveTypes.Custom) {
+    constructor(CommonTypes.CurveTypes _curveType) public {
+        if (_curveType == CommonTypes.CurveTypes.Custom) {
             curveParams = PrebuildCurves.undefined();
-            _curveType = CurveTypes.Undefined;
+            _curveType = CommonTypes.CurveTypes.Undefined;
         }
         curveType = _curveType;
-        if (_curveType == CurveTypes.Bn256) {
+        if (_curveType == CommonTypes.CurveTypes.Bn256) {
             curveParams = PrebuildCurves.bn256();
         }
-        if (_curveType == CurveTypes.Bls12_381) {
+        if (_curveType == CommonTypes.CurveTypes.Bls12_381) {
             curveParams = PrebuildCurves.bls12_381();
         }
-        if (_curveType == CurveTypes.Undefined) {
+        if (_curveType == CommonTypes.CurveTypes.Undefined) {
             curveParams = PrebuildCurves.undefined();
         }
     }
@@ -44,7 +35,7 @@ contract EIP1962API {
     // Modifier checks that current curveType is not undefined.
     modifier curveIsDefined() {
         require(
-            curveType != CurveTypes.Undefined,
+            curveType != CommonTypes.CurveTypes.Undefined,
             "Curve should be defined: choose from prebuild or add custom curveParams"
         );
         _;
@@ -53,30 +44,30 @@ contract EIP1962API {
     // Sets up current curveType and curveParams.
     // If _curveType is Custom then curveType will be setted to Undefined.
     function setCurveType(
-        CurveTypes _curveType
+        CommonTypes.CurveTypes _curveType
     ) public {
-        if (_curveType == CurveTypes.Custom) {
+        if (_curveType == CommonTypes.CurveTypes.Custom) {
             curveParams = PrebuildCurves.undefined();
-            _curveType = CurveTypes.Undefined;
+            _curveType = CommonTypes.CurveTypes.Undefined;
         }
         curveType = _curveType;
-        if (_curveType == CurveTypes.Bn256) {
+        if (_curveType == CommonTypes.CurveTypes.Bn256) {
             curveParams = PrebuildCurves.bn256();
         }
-        if (_curveType == CurveTypes.Bls12_381) {
+        if (_curveType == CommonTypes.CurveTypes.Bls12_381) {
             curveParams = PrebuildCurves.bls12_381();
         }
-        if (_curveType == CurveTypes.Undefined) {
+        if (_curveType == CommonTypes.CurveTypes.Undefined) {
             curveParams = PrebuildCurves.undefined();
         }
     }
 
     // Sets up current curveParams. Current curveType will be setted up to Custom.
     function setCurveParams(
-        EIP1962.CurveParams memory _curveParams
+        CommonTypes.CurveParams memory _curveParams
     ) public {
         curveParams = _curveParams;
-        curveType = CurveTypes.Custom;
+        curveType = CommonTypes.CurveTypes.Custom;
     }
 
     // Compies the G1 Add operation result.
@@ -86,10 +77,10 @@ contract EIP1962API {
     // - rhs - second point's X and Y coordinates in G1Point struct representation
     // Returns the newly created bytes memory.
     function g1Add(
-        EIP1962.G1Point memory lhs,
-        EIP1962.G1Point memory rhs
+        CommonTypes.G1Point memory lhs,
+        CommonTypes.G1Point memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.g1Add(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.g1Add(curveParams, lhs, rhs);
     }
 
     // Compies the G1 Mul operation result.
@@ -99,10 +90,10 @@ contract EIP1962API {
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
     function g1Mul(
-        EIP1962.G1Point memory lhs,
+        CommonTypes.G1Point memory lhs,
         bytes memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.g1Mul(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.g1Mul(curveParams, lhs, rhs);
     }
 
     // Compies the G1 Multiexponentiation operation result.
@@ -114,10 +105,10 @@ contract EIP1962API {
     // Returns the newly created bytes memory.
     function g1MultiExp(
         uint8 numPairs,
-        EIP1962.G1Point memory point,
+        CommonTypes.G1Point memory point,
         bytes memory scalar
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.g1MultiExp(curveParams, numPairs, point, scalar);
+        result = EIP1962_CoreAPI.g1MultiExp(curveParams, numPairs, point, scalar);
     }
 
     // Compies the G2 Add operation result.
@@ -127,10 +118,10 @@ contract EIP1962API {
     // - rhs - second point's X and Y coordinates in G2Point struct representation
     // Returns the newly created bytes memory.
     function g2Add(
-        EIP1962.G2Point memory lhs,
-        EIP1962.G2Point memory rhs
+        CommonTypes.G2Point memory lhs,
+        CommonTypes.G2Point memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.g2Add(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.g2Add(curveParams, lhs, rhs);
     }
 
     // Compies the G2 Mul operation result.
@@ -140,10 +131,10 @@ contract EIP1962API {
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
     function g2Mul(
-        EIP1962.G2Point memory lhs,
+        CommonTypes.G2Point memory lhs,
         bytes memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.g2Mul(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.g2Mul(curveParams, lhs, rhs);
     }
 
     // Compies the G2 Multiexponentiation operation result.
@@ -155,10 +146,10 @@ contract EIP1962API {
     // Returns the newly created bytes memory.
     function g2MultiExp(
         uint8 numPairs,
-        EIP1962.G2Point memory point,
+        CommonTypes.G2Point memory point,
         bytes memory scalar
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.g2MultiExp(curveParams, numPairs, point, scalar);
+        result = EIP1962_CoreAPI.g2MultiExp(curveParams, numPairs, point, scalar);
     }
 
     // Verifies the correctness of the pairing operation parameters.
@@ -166,9 +157,9 @@ contract EIP1962API {
     // Params:
     // - pairs -  point pairs array encoded as (G1 point, G2 point) in bytes
     function pairing(
-        EIP1962.Pair[] memory pairs
+        CommonTypes.Pair[] memory pairs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962.pairing(curveParams, pairs);
+        result = EIP1962_CoreAPI.pairing(curveParams, pairs);
     }
 
 }

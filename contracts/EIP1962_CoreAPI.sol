@@ -2,8 +2,9 @@ pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
 import {Bytes} from "../contracts/Bytes.sol";
+import {CommonTypes} from "../contracts/CommonTypes.sol";
 
-library EIP1962 {
+library EIP1962_CoreAPI {
 
     // MARK: - Supported operations with codes
     uint8 internal constant OPERATION_G1_ADD = 0x01;
@@ -17,54 +18,16 @@ library EIP1962 {
     // Precompiled contract address
     uint internal constant CONTRACT_ID = 1962;
 
-    // Curve parameters struct
-    struct CurveParams {
-        uint8 curveType;
-        uint8 fieldLength;
-        bytes baseFieldModulus;
-        uint8 extensionDegree;
-        bytes a;
-        bytes b;
-        uint8 groupOrderLength;
-        bytes groupOrder;
-        bytes fpNonResidue;
-        bytes mainSubgroupOrder;
-        bytes fp2NonResidue;
-        bytes fp6NonResidue;
-        uint8 twistType;
-        uint8 xLength;
-        bytes x;
-        uint8 sign;
-    }
-
-    // G1 Point
-    struct G1Point {
-        uint X;
-        uint Y;
-    }
-
-    // G2 Point
-    struct G2Point {
-        uint[2] X;
-        uint[2] Y;
-    }
-
-    // Points pair
-    struct Pair {
-        G1Point g1p;
-        G2Point g2p;
-    }
-
     // Compies G1 point into a new bytes memory.
     // Returns the newly created bytes memory.
-    function g1PointToBytes(G1Point memory point, uint pointLength) internal pure returns (bytes memory result) {
+    function g1PointToBytes(CommonTypes.G1Point memory point, uint pointLength) internal pure returns (bytes memory result) {
         result = Bytes.toBytesFromUInt(point.X, pointLength/2);
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y, pointLength/2));
     }
 
     // Compies G2 point into a new bytes memory.
     // Returns the newly created bytes memory.
-    function g2PointToBytes(G2Point memory point, uint pointLength) internal pure returns (bytes memory result) {
+    function g2PointToBytes(CommonTypes.G2Point memory point, uint pointLength) internal pure returns (bytes memory result) {
         result = Bytes.toBytesFromUInt(point.X[0], pointLength/4);
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.X[1], pointLength/4));
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[0], pointLength/4));
@@ -73,21 +36,28 @@ library EIP1962 {
 
     // Compies points pair into a new bytes memory.
     // Returns the newly created bytes memory.
-    function pairToBytes(Pair memory pair, uint g1PointLength, uint g2PointLength) internal pure returns (bytes memory result) {
+    function pairToBytes(
+        CommonTypes.Pair memory pair,
+        uint g1PointLength,
+        uint g2PointLength) internal pure returns (bytes memory result) {
         result = g1PointToBytes(pair.g1p, g1PointLength);
         result = Bytes.concat(result, g2PointToBytes(pair.g2p, g2PointLength));
     }
 
     // Compies points pairs array into a new bytes memory.
     // Returns the newly created bytes memory.
-    function pairsArrayToBytes(Pair[] memory pairs, uint g1PointLength, uint g2PointLength) internal pure returns (bytes memory result) {
+    function pairsArrayToBytes(
+        CommonTypes.Pair[] memory pairs,
+        uint g1PointLength,
+        uint g2PointLength
+    ) internal pure returns (bytes memory result) {
         for (uint i = 0; i < pairs.length; i++) {
             result = Bytes.concat(result, pairToBytes(pairs[i], g1PointLength, g2PointLength));
         }
     }
 
     // Verifies the correctness of the curve parameters.
-    function verifyCorrectCurveParamsLengths(CurveParams memory params) internal pure {
+    function verifyCorrectCurveParamsLengths(CommonTypes.CurveParams memory params) internal pure {
         require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
         require(params.a.length == params.fieldLength, "a should be equal to fieldLength");
         require(params.b.length == params.fieldLength, "b should be equal to fieldLength");
@@ -110,7 +80,7 @@ library EIP1962 {
     // - lhs - first point's X and Y coordinates in bytes
     // - rhs - second point's X and Y coordinates in bytes
     function verifyCorrectG1AddDataLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
     ) internal pure {
@@ -125,7 +95,7 @@ library EIP1962 {
     // - lhs - first point's X and Y coordinates in bytes
     // - rhs - sсalar multiplication factor in bytes
     function verifyCorrectG1MulDataLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
     ) internal pure {
@@ -140,7 +110,7 @@ library EIP1962 {
     // - point -  point's X and Y coordinates in bytes
     // - scalar - sсalar order of exponentiation in bytes
     function verifyCorrectG1MultiExpDataLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory point,
         bytes memory scalar
     ) internal pure {
@@ -151,7 +121,7 @@ library EIP1962 {
 
     // Compies the common prefix for all G1 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG1OpDataInBytes(CurveParams memory curveParams) internal pure returns (bytes memory opData) {
+    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory opData) {
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, curveParams.a);
@@ -167,9 +137,9 @@ library EIP1962 {
     // - rhs - second point's X and Y coordinates in G1Point struct representation
     // Returns the newly created bytes memory.
     function g1Add(
-        CurveParams memory curveParams,
-        G1Point memory lhs,
-        G1Point memory rhs
+        CommonTypes.CurveParams memory curveParams,
+        CommonTypes.G1Point memory lhs,
+        CommonTypes.G1Point memory rhs
     ) public view returns (bytes memory result) {
 
         bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
@@ -199,8 +169,8 @@ library EIP1962 {
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
     function g1Mul(
-        CurveParams memory curveParams,
-        G1Point memory lhs,
+        CommonTypes.CurveParams memory curveParams,
+        CommonTypes.G1Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
 
@@ -231,9 +201,9 @@ library EIP1962 {
     // - scalar - sсalar order of exponentiation in bytes
     // Returns the newly created bytes memory.
     function g1MultiExp(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
-        G1Point memory point,
+        CommonTypes.G1Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
 
@@ -267,7 +237,7 @@ library EIP1962 {
     // - lhs - first point's X and Y coordinates in bytes
     // - rhs - second point's X and Y coordinates in bytes
     function verifyCorrectG2AddDataLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
     ) internal pure {
@@ -288,7 +258,7 @@ library EIP1962 {
     // - lhs - first point's X and Y coordinates in bytes
     // - rhs - sсalar multiplication factor in bytes
     function verifyCorrectG2MulDataLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
     ) internal pure {
@@ -309,7 +279,7 @@ library EIP1962 {
     // - point -  point's X and Y coordinates in bytes
     // - scalar - sсalar order of exponentiation in bytes
     function verifyCorrectG2MultiExpDataLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory point,
         bytes memory scalar
     ) internal pure {
@@ -326,7 +296,7 @@ library EIP1962 {
 
     // Compies the common prefix for all G2 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG2OpDataInBytes(CurveParams memory curveParams) internal pure returns (bytes memory opData) {
+    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory opData) {
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.extensionDegree));
@@ -344,9 +314,9 @@ library EIP1962 {
     // - rhs - second point's X and Y coordinates in G2Point struct representation
     // Returns the newly created bytes memory.
     function g2Add(
-        CurveParams memory curveParams,
-        G2Point memory lhs,
-        G2Point memory rhs
+        CommonTypes.CurveParams memory curveParams,
+        CommonTypes.G2Point memory lhs,
+        CommonTypes.G2Point memory rhs
     ) public view returns (bytes memory result) {
         bytes memory lhsBytes = g2PointToBytes(lhs, curveParams.extensionDegree*curveParams.fieldLength);
         bytes memory rhsBytes = g2PointToBytes(rhs, curveParams.extensionDegree*curveParams.fieldLength);
@@ -375,8 +345,8 @@ library EIP1962 {
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
     function g2Mul(
-        CurveParams memory curveParams,
-        G2Point memory lhs,
+        CommonTypes.CurveParams memory curveParams,
+        CommonTypes.G2Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         bytes memory lhsBytes = g2PointToBytes(lhs, curveParams.extensionDegree*curveParams.fieldLength);
@@ -406,9 +376,9 @@ library EIP1962 {
     // - scalar - sсalar order of exponentiation in bytes
     // Returns the newly created bytes memory.
     function g2MultiExp(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
-        G2Point memory point,
+        CommonTypes.G2Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
         bytes memory pointBytes = g2PointToBytes(point, curveParams.extensionDegree*curveParams.fieldLength);
@@ -438,7 +408,7 @@ library EIP1962 {
     // - curveParams - curve parameters
     // - pairs -  point pairs array encoded as (G1 point, G2 point) in bytes
     function verifyCorrectPairingPairsLengths(
-        CurveParams memory curveParams,
+        CommonTypes.CurveParams memory curveParams,
         bytes memory pairs,
         uint8 numPairs
     ) internal pure {
@@ -451,7 +421,7 @@ library EIP1962 {
 
     // Compies the common prefix for pairing operation based on curve parameters.
     // Returns the newly created bytes memory.
-    function getPairingOpDataInBytes(CurveParams memory curveParams) internal pure returns (bytes memory opData) {
+    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory opData) {
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -470,12 +440,12 @@ library EIP1962 {
     // Compies the pairing operation result.
     // Params:
     // - curveParams - curve parameters
-    // - pairs - point pairs encoded as (G1 point, G2 point) in Pair struct representation
+    // - pairs - point pairs encoded as (G1 point, G2 point) in CommonTypes.Pair struct representation
     // Returns: if result of a pairing (element of Fp12) is equal to identity
     //  - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function pairing(
-        CurveParams memory curveParams,
-        Pair[] memory pairs
+        CommonTypes.CurveParams memory curveParams,
+        CommonTypes.Pair[] memory pairs
     ) public view returns (bytes memory result) {
         uint8 numPairs = uint8(pairs.length);
         bytes memory pairsBytes = pairsArrayToBytes(pairs, 2*curveParams.fieldLength, curveParams.extensionDegree*curveParams.fieldLength);
