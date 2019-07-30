@@ -15,7 +15,7 @@ library EIP1962 {
     uint8 internal constant OPERATION_PAIRING = 0x07;
 
     // Precompiled contract address
-    uint8 internal constant CONTRACT_ID = 0x09;
+    uint internal constant CONTRACT_ID = 1962;
 
     // Curve parameters struct
     struct CurveParams {
@@ -531,7 +531,7 @@ library EIP1962 {
         uint inputLength,
         uint outLength
     ) internal view returns (bytes memory result) {
-        uint8 id = CONTRACT_ID;
+        uint id = CONTRACT_ID;
         bytes memory out;
         assembly {
             result := staticcall(sub(gas, 2000), id, input, inputLength, out, outLength)
