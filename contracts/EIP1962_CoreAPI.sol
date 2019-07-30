@@ -15,9 +15,6 @@ library EIP1962_CoreAPI {
     uint8 internal constant OPERATION_G2_MULTIEXP = 0x06;
     uint8 internal constant OPERATION_PAIRING = 0x07;
 
-    // Precompiled contract address
-    uint internal constant CONTRACT_ID = 1962;
-
     // Compies G1 point into a new bytes memory.
     // Returns the newly created bytes memory.
     function g1PointToBytes(CommonTypes.G1Point memory point, uint pointLength) internal pure returns (bytes memory result) {
@@ -156,6 +153,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, rhsBytes);
 
         result = callEip1962(
+            1962,
             data,
             1 + opData.length + lhsBytes.length + rhsBytes.length,
             lhsBytes.length
@@ -187,6 +185,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, rhs);
 
         result = callEip1962(
+            1962,
             data,
             1 + opData.length + lhsBytes.length + rhs.length,
             lhsBytes.length
@@ -221,6 +220,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, scalar);
 
         result = callEip1962(
+            1962,
             data,
             2 + opData.length + pointBytes.length + scalar.length,
             pointBytes.length
@@ -332,6 +332,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, rhsBytes);
 
         result = callEip1962(
+            1962,
             data,
             1 + opData.length + lhsBytes.length + rhsBytes.length,
             lhsBytes.length
@@ -362,6 +363,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, rhs);
 
         result = callEip1962(
+            1962,
             data,
             1 + opData.length + lhsBytes.length + rhs.length,
             lhsBytes.length
@@ -395,6 +397,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, scalar);
 
         result = callEip1962(
+            1962,
             data,
             2 + opData.length + pointBytes.length + scalar.length,
             pointBytes.length
@@ -461,6 +464,7 @@ library EIP1962_CoreAPI {
         data = Bytes.concat(data, pairsBytes);
 
         result = callEip1962(
+            1962,
             data,
             2 + opData.length + pairsBytes.length,
             1
@@ -475,14 +479,14 @@ library EIP1962_CoreAPI {
     // Returns: if result of a pairing (element of Fp12) is equal to identity
     //  - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function callEip1962(
+        uint contractId,
         bytes memory input,
         uint inputLength,
         uint outLength
     ) internal view returns (bytes memory result) {
-        uint id = CONTRACT_ID;
         bytes memory out;
         assembly {
-            result := staticcall(sub(gas, 2000), id, input, inputLength, out, outLength)
+            result := staticcall(sub(gas, 2000), contractId, input, inputLength, out, outLength)
         }
     }
 }
