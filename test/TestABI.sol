@@ -4,13 +4,14 @@ pragma experimental ABIEncoderV2;
 import {EllipticCurve} from "../contracts/EllipticCurve.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
 import {HelpersForTests} from "../test/HelpersForTests.sol";
+import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
 
 contract TestABI {
 
     EllipticCurve elCurve;
 
-    constructor(CommonTypes.CurveParams memory curveParams) public {
-        elCurve = new EllipticCurve(curveParams);
+    constructor() public {
+        elCurve = new EllipticCurve(PrebuildCurves.bn256());
     }
 
     function getCurveParams() public view {

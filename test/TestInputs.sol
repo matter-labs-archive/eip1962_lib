@@ -4,16 +4,17 @@ pragma experimental ABIEncoderV2;
 import {GenericEllipticCurve} from "../contracts/GenericEllipticCurve.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
 import {HelpersForTests} from "../test/HelpersForTests.sol";
+import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
 
 contract TestInputs {
 
     CommonTypes.CurveParams curveParams;
 
-    constructor( CommonTypes.CurveParams memory _curveParams) public {
-        _curveParams = curveParams;
+    constructor() public {
+        curveParams = PrebuildCurves.bn256();
     }
 
-    function testFormAddInputInput(
+    function testFormAddInput(
             uint p1x, uint p1y,
             uint p2x, uint p2y,
             bytes memory correctInput

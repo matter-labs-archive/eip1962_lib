@@ -3,12 +3,12 @@ const chai = require('chai');
 const {deployContract, solidity} = require('ethereum-waffle');
 const ethers = require('ethers');
 
-const TEST_CONTRACT = require('../build/TestEllipticCurve');
+const TEST_CONTRACT = require('../build/TestABI');
 
 chai.use(solidity);
 const {expect} = chai;
 
-describe('Test API', () => {
+describe('Test ABI', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
   let test;
