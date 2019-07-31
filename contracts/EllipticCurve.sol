@@ -5,69 +5,31 @@ import {EIP1962_CoreAPI} from "../contracts/EIP1962_CoreAPI.sol";
 import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
 
-contract EIP1962_PublicAPI {
+contract EllipticCurve {
 
     // Current curve parameters
-    CommonTypes.CurveParams curveParams;
+    CommonTypes.CurveParams internal curveParams;
 
-    // Current curve
-    CommonTypes.CurveTypes curveType;
+    // Contract creator
+    address creator;
 
-    // Constructor input is curve type.
+    // Constructor input is curve params.
     // If _curveType is Custom then curveType will be setted to Undefined.
-    constructor(CommonTypes.CurveTypes _curveType) public {
-        if (_curveType == CommonTypes.CurveTypes.Custom) {
-            curveParams = PrebuildCurves.undefined();
-            _curveType = CommonTypes.CurveTypes.Undefined;
-        }
-        curveType = _curveType;
-        if (_curveType == CommonTypes.CurveTypes.Bn256) {
-            curveParams = PrebuildCurves.bn256();
-        }
-        if (_curveType == CommonTypes.CurveTypes.Bls12_381) {
-            curveParams = PrebuildCurves.bls12_381();
-        }
-        if (_curveType == CommonTypes.CurveTypes.Undefined) {
-            curveParams = PrebuildCurves.undefined();
-        }
-    }
-
-    // Modifier checks that current curveType is not undefined.
-    modifier curveIsDefined() {
-        require(
-            curveType != CommonTypes.CurveTypes.Undefined,
-            "Curve should be defined: choose from prebuild or add custom curveParams"
-        );
-        _;
-    }
-
-    // Sets up current curveType and curveParams.
-    // If _curveType is Custom then curveType will be setted to Undefined.
-    function setCurveType(
-        CommonTypes.CurveTypes _curveType
-    ) public {
-        if (_curveType == CommonTypes.CurveTypes.Custom) {
-            curveParams = PrebuildCurves.undefined();
-            _curveType = CommonTypes.CurveTypes.Undefined;
-        }
-        curveType = _curveType;
-        if (_curveType == CommonTypes.CurveTypes.Bn256) {
-            curveParams = PrebuildCurves.bn256();
-        }
-        if (_curveType == CommonTypes.CurveTypes.Bls12_381) {
-            curveParams = PrebuildCurves.bls12_381();
-        }
-        if (_curveType == CommonTypes.CurveTypes.Undefined) {
-            curveParams = PrebuildCurves.undefined();
-        }
-    }
-
-    // Sets up current curveParams. Current curveType will be setted up to Custom.
-    function setCurveParams(
-        CommonTypes.CurveParams memory _curveParams
-    ) public {
+    constructor(CommonTypes.CurveParams memory _curveParams) public {
         curveParams = _curveParams;
-        curveType = CommonTypes.CurveTypes.Custom;
+        creator = msg.sender;
+    }
+
+    // Only the elliptic curve contract creator can change curve params.
+    function changeCurveParams(CommonTypes.CurveParams memory _curveParams) public {
+        if (msg.sender != creator) return;
+
+        curveParams = _curveParams;
+    }
+
+    // Get curve params
+    function getCurveParams() public view returns (CommonTypes.CurveParams memory) {
+        return curveParams;
     }
 
     // Compies the G1 Add operation result.
@@ -79,7 +41,7 @@ contract EIP1962_PublicAPI {
     function g1Add(
         CommonTypes.G1Point memory lhs,
         CommonTypes.G1Point memory rhs
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG1AddInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
@@ -98,7 +60,7 @@ contract EIP1962_PublicAPI {
     function g1Mul(
         CommonTypes.G1Point memory lhs,
         bytes memory rhs
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG1MulInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
@@ -119,7 +81,7 @@ contract EIP1962_PublicAPI {
         uint8 numPairs,
         CommonTypes.G1Point memory point,
         bytes memory scalar
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG1MultiExpInput(curveParams, numPairs, point, scalar);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
@@ -138,7 +100,7 @@ contract EIP1962_PublicAPI {
     function g2Add(
         CommonTypes.G2Point memory lhs,
         CommonTypes.G2Point memory rhs
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG2AddInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
@@ -157,7 +119,7 @@ contract EIP1962_PublicAPI {
     function g2Mul(
         CommonTypes.G2Point memory lhs,
         bytes memory rhs
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG2MulInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
@@ -178,7 +140,7 @@ contract EIP1962_PublicAPI {
         uint8 numPairs,
         CommonTypes.G2Point memory point,
         bytes memory scalar
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG2MultiExpInput(curveParams, numPairs, point, scalar);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
@@ -196,7 +158,7 @@ contract EIP1962_PublicAPI {
     // If result of a pairing (element of Fp12) is equal to identity - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function pairing(
         CommonTypes.Pair[] memory pairs
-    ) public view curveIsDefined() returns (bytes memory result) {
+    ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formPairingInput(curveParams, pairs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,

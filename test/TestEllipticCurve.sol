@@ -1,24 +1,24 @@
 pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
-import {EIP1962_PublicAPI} from "../contracts/EIP1962_PublicAPI.sol";
+import {EllipticCurve} from "../contracts/EllipticCurve.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../test/HelpersForTests.sol";
+import {HelpersForTests} from "../contracts/HelpersForTests.sol";
 
-contract TestAPI {
+contract TestEllipticCurve {
 
-    EIP1962_PublicAPI eip1962api;
+    EllipticCurve elCurve;
 
-    constructor(CommonTypes.CurveTypes curveType) public {
-        eip1962api = new EIP1962_PublicAPI(curveType);
+    constructor(CommonTypes.CurveParams memory curveParams) public {
+        elCurve = new EllipticCurve(curveParams);
     }
 
-    function setCurveType(CommonTypes.CurveTypes curveType) public {
-        eip1962api.setCurveType(curveType);
+    function getCurveParams() public view {
+        elCurve.getCurveParams();
     }
 
-    function setCurveParams(CommonTypes.CurveParams memory curveParams) public {
-        eip1962api.setCurveParams(curveParams);
+    function changeCurveParams(CommonTypes.CurveParams memory curveParams) public {
+        elCurve.changeCurveParams(curveParams);
     }
 
     function testAddG1(uint p1x, uint p1y,
@@ -32,7 +32,7 @@ contract TestAPI {
             X: p2x,
             Y: p2y
         });
-        bytes memory result = eip1962api.g1Add(p1, p2);
+        bytes memory result = elCurve.g1Add(p1, p2);
         return HelpersForTests.equal(result, correctResult);
     }
 
@@ -43,7 +43,7 @@ contract TestAPI {
             X: px,
             Y: py
         });
-        bytes memory result = eip1962api.g1Mul(p, factor);
+        bytes memory result = elCurve.g1Mul(p, factor);
         return HelpersForTests.equal(result, correctResult);
     }
 
@@ -55,7 +55,7 @@ contract TestAPI {
             X: px,
             Y: py
         });
-        bytes memory result = eip1962api.g1MultiExp(numPairs, p, order);
+        bytes memory result = elCurve.g1MultiExp(numPairs, p, order);
         return HelpersForTests.equal(result, correctResult);
     }
 
@@ -72,7 +72,7 @@ contract TestAPI {
             X: [p2x0, p2x1],
             Y: [p2y0, p2y1]
         });
-        bytes memory result = eip1962api.g2Add(p1, p2);
+        bytes memory result = elCurve.g2Add(p1, p2);
         return HelpersForTests.equal(result, correctResult);
     }
 
@@ -84,7 +84,7 @@ contract TestAPI {
             X: [px0, px1],
             Y: [py0, py1]
         });
-        bytes memory result = eip1962api.g2Mul(p, factor);
+        bytes memory result = elCurve.g2Mul(p, factor);
         return HelpersForTests.equal(result, correctResult);
     }
 
@@ -97,7 +97,7 @@ contract TestAPI {
             X: [px0, px1],
             Y: [py0, py1]
         });
-        bytes memory result = eip1962api.g2MultiExp(numPairs, p, order);
+        bytes memory result = elCurve.g2MultiExp(numPairs, p, order);
         return HelpersForTests.equal(result, correctResult);
     }
 
@@ -130,7 +130,7 @@ contract TestAPI {
         resPairs[0] = pair1;
         resPairs[1] = pair2;
 
-        bytes memory result = eip1962api.pairing(resPairs);
+        bytes memory result = elCurve.pairing(resPairs);
         return HelpersForTests.equal(result, correctResult);
     }
 

@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import {EIP1962_CoreAPI} from "../contracts/EIP1962_CoreAPI.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../test/HelpersForTests.sol";
+import {HelpersForTests} from "../contracts/HelpersForTests.sol";
 
 contract TestCore {
 
