@@ -118,13 +118,15 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for all G1 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory opData) {
+    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory) {
+        bytes memory opData = new bytes(2 + 3 * curveParams.fieldLength + curveParams.groupOrderLength);
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, curveParams.a);
         opData = Bytes.concat(opData, curveParams.b);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.groupOrderLength));
         opData = Bytes.concat(opData, curveParams.groupOrder);
+        return opData;
     }
 
     // Compies the G1 Add operation result.
@@ -137,7 +139,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G1Point memory lhs,
         CommonTypes.G1Point memory rhs
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
 
         bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
         bytes memory rhsBytes = g1PointToBytes(rhs, 2*curveParams.fieldLength);
@@ -146,15 +148,13 @@ library GenericEllipticCurve {
 
         bytes memory opData = getG1OpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(1 + opData.length + lhsBytes.length + rhsBytes.length);
         input = Bytes.toBytesFromUInt8(OPERATION_G1_ADD);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, lhsBytes);
         input = Bytes.concat(input, rhsBytes);
 
-        require(input.length == 1 + opData.length + lhsBytes.length + rhsBytes.length,
-            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhsBytes.length'");
-
-        outputLength = lhsBytes.length;
+        return (input, lhsBytes.length);
     }
 
     // Compies the G1 Mul operation result.
@@ -167,7 +167,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G1Point memory lhs,
         bytes memory rhs
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
 
         bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
 
@@ -175,15 +175,13 @@ library GenericEllipticCurve {
 
         bytes memory opData = getG1OpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(1 + opData.length + lhsBytes.length + rhs.length);
         input = Bytes.toBytesFromUInt8(OPERATION_G1_MUL);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, lhsBytes);
         input = Bytes.concat(input, rhs);
 
-        require(input.length == 1 + opData.length + lhsBytes.length + rhs.length,
-            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhs.length'");
-
-        outputLength = lhsBytes.length;
+        return (input, lhsBytes.length);
     }
 
     // Compies the G1 Multiexponentiation operation result.
@@ -198,7 +196,7 @@ library GenericEllipticCurve {
         uint8 numPairs,
         CommonTypes.G1Point memory point,
         bytes memory scalar
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
 
         bytes memory pointBytes = g1PointToBytes(point, 2*curveParams.fieldLength);
 
@@ -206,16 +204,14 @@ library GenericEllipticCurve {
 
         bytes memory opData = getG1OpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(2 + opData.length + pointBytes.length + scalar.length);
         input = Bytes.toBytesFromUInt8(OPERATION_G1_MULTIEXP);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
         input = Bytes.concat(input, pointBytes);
         input = Bytes.concat(input, scalar);
 
-        require(input.length == 2 + opData.length + pointBytes.length + scalar.length,
-            "Input length should be equal to '2 + opData.length + pointBytes.length + scalar.length'");
-
-        outputLength = pointBytes.length;
+        return (input, pointBytes.length);
     }
 
     //
@@ -287,7 +283,8 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for all G2 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory opData) {
+    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory) {
+        bytes memory opData = new bytes(3 + 4 * curveParams.fieldLength + curveParams.groupOrderLength);
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.extensionDegree));
@@ -296,6 +293,7 @@ library GenericEllipticCurve {
         opData = Bytes.concat(opData, curveParams.b);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.groupOrderLength));
         opData = Bytes.concat(opData, curveParams.groupOrder);
+        return opData;
     }
 
     // Compies the G2 Add operation result.
@@ -308,7 +306,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G2Point memory lhs,
         CommonTypes.G2Point memory rhs
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
         bytes memory lhsBytes = g2PointToBytes(lhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
         bytes memory rhsBytes = g2PointToBytes(rhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
@@ -316,15 +314,13 @@ library GenericEllipticCurve {
 
         bytes memory opData = getG2OpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(1 + opData.length + lhsBytes.length + rhsBytes.length);
         input = Bytes.toBytesFromUInt8(OPERATION_G2_ADD);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, lhsBytes);
         input = Bytes.concat(input, rhsBytes);
 
-        require(input.length == 1 + opData.length + lhsBytes.length + rhsBytes.length,
-            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhsBytes.length'");
-
-        outputLength = lhsBytes.length;
+        return (input, lhsBytes.length);
     }
 
     // Compies the G2 Mul operation result.
@@ -337,22 +333,20 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G2Point memory lhs,
         bytes memory rhs
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
         bytes memory lhsBytes = g2PointToBytes(lhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MulDataLengths(curveParams, lhsBytes, rhs);
 
         bytes memory opData = getG2OpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(1 + opData.length + lhsBytes.length + rhs.length);
         input = Bytes.toBytesFromUInt8(OPERATION_G2_MUL);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, lhsBytes);
         input = Bytes.concat(input, rhs);
 
-        require(input.length == 1 + opData.length + lhsBytes.length + rhs.length,
-            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhs.length'");
-
-        outputLength = lhsBytes.length;
+        return (input, lhsBytes.length);
     }
 
     // Compies the G2 Multiexponentiation operation result.
@@ -367,23 +361,21 @@ library GenericEllipticCurve {
         uint8 numPairs,
         CommonTypes.G2Point memory point,
         bytes memory scalar
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
         bytes memory pointBytes = g2PointToBytes(point, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MultiExpDataLengths(curveParams, pointBytes, scalar);
 
         bytes memory opData = getG2OpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(2 + opData.length + pointBytes.length + scalar.length);
         input = Bytes.toBytesFromUInt8(OPERATION_G2_MULTIEXP);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
         input = Bytes.concat(input, pointBytes);
         input = Bytes.concat(input, scalar);
 
-        require(input.length == 2 + opData.length + pointBytes.length + scalar.length,
-            "Input length should be equal to '2 + opData.length + pointBytes.length + scalar.length'");
-
-        outputLength = pointBytes.length;
+        return (input, pointBytes.length);
     }
 
     // MARK: - Pairing operation
@@ -406,7 +398,8 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for pairing operation based on curve parameters.
     // Returns the newly created bytes memory.
-    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory opData) {
+    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory) {
+        bytes memory opData = new bytes(6 + 6 * curveParams.fieldLength + curveParams.groupOrderLength + curveParams.xLength);
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -420,6 +413,7 @@ library GenericEllipticCurve {
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.xLength));
         opData = Bytes.concat(opData, curveParams.x);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.sign));
+        return opData;
     }
 
     // Compies the pairing operation input and outputLength.
@@ -430,7 +424,7 @@ library GenericEllipticCurve {
     function formPairingInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.Pair[] memory pairs
-    ) public pure returns (bytes memory input, uint outputLength) {
+    ) public pure returns (bytes memory, uint) {
         uint8 numPairs = uint8(pairs.length);
         bytes memory pairsBytes = pairsArrayToBytes(pairs, 2*curveParams.fieldLength, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
@@ -438,15 +432,13 @@ library GenericEllipticCurve {
 
         bytes memory opData = getPairingOpDataInBytes(curveParams);
 
+        bytes memory input = new bytes(2 + opData.length + pairsBytes.length);
         input = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
         input = Bytes.concat(input, opData);
         input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
         input = Bytes.concat(input, pairsBytes);
 
-        require(input.length == 2 + opData.length + pairsBytes.length,
-            "Input length should be equal to '2 + opData.length + pairsBytes.length'");
-
-        outputLength = 1;
+        return (input, 1);
     }
 
     // Compies the EIP-1962 contract static call result.
