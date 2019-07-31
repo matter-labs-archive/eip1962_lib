@@ -132,7 +132,7 @@ library EIP1962_CoreAPI {
     // - curveParams - curve parameters
     // - lhs - first point's X and Y coordinates in G1Point struct representation
     // - rhs - second point's X and Y coordinates in G1Point struct representation
-    // Returns the newly created bytes memory.
+    // Returns: operation input and outputLength
     function formG1AddInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G1Point memory lhs,
@@ -162,7 +162,7 @@ library EIP1962_CoreAPI {
     // - curveParams - curve parameters
     // - lhs - first point's X and Y coordinates in G1Point struct representation
     // - rhs - sсalar multiplication factor in bytes
-    // Returns the newly created bytes memory.
+    // Returns: operation input and outputLength
     function formG1MulInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G1Point memory lhs,
@@ -192,7 +192,7 @@ library EIP1962_CoreAPI {
     // - numPairs - number of (point, scalar) pairs for multiexponentiation
     // - point -  point's X and Y coordinates in G1Point struct representation
     // - scalar - sсalar order of exponentiation in bytes
-    // Returns the newly created bytes memory.
+    // Returns: operation input and outputLength
     function formG1MultiExpInput(
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
@@ -303,7 +303,7 @@ library EIP1962_CoreAPI {
     // - curveParams - curve parameters
     // - lhs - first point's X and Y coordinates in G2Point struct representation
     // - rhs - second point's X and Y coordinates in G2Point struct representation
-    // Returns the newly created bytes memory.
+    // Returns: operation input and outputLength
     function formG2AddInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G2Point memory lhs,
@@ -332,7 +332,7 @@ library EIP1962_CoreAPI {
     // - curveParams - curve parameters
     // - lhs - first point's X and Y coordinates in G2Point struct representation
     // - rhs - sсalar multiplication factor in bytes
-    // Returns the newly created bytes memory.
+    // Returns: operation input and outputLength.
     function formG2MulInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G2Point memory lhs,
@@ -361,7 +361,7 @@ library EIP1962_CoreAPI {
     // - numPairs - number of (point, scalar) pairs for multiexponentiation
     // - point -  point's X and Y coordinates in G2Point struct representation
     // - scalar - sсalar order of exponentiation in bytes
-    // Returns the newly created bytes memory.
+    // Returns: operation input and outputLength.
     function formG2MultiExpInput(
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,

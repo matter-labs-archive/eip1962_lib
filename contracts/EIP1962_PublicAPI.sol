@@ -99,7 +99,7 @@ contract EIP1962_PublicAPI {
         CommonTypes.G1Point memory lhs,
         bytes memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g1Mul(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG1MulInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
             input,
@@ -120,7 +120,7 @@ contract EIP1962_PublicAPI {
         CommonTypes.G1Point memory point,
         bytes memory scalar
     ) public view curveIsDefined() returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g1MultiExp(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG1MultiExpInput(curveParams, numPairs, point, scalar);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
             input,
@@ -139,7 +139,7 @@ contract EIP1962_PublicAPI {
         CommonTypes.G2Point memory lhs,
         CommonTypes.G2Point memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g2Add(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG2AddInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
             input,
@@ -158,7 +158,7 @@ contract EIP1962_PublicAPI {
         CommonTypes.G2Point memory lhs,
         bytes memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g2Mul(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG2MulInput(curveParams, lhs, rhs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
             input,
@@ -179,7 +179,7 @@ contract EIP1962_PublicAPI {
         CommonTypes.G2Point memory point,
         bytes memory scalar
     ) public view curveIsDefined() returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g2MultiExp(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG2MultiExpInput(curveParams, numPairs, point, scalar);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
             input,
@@ -192,10 +192,12 @@ contract EIP1962_PublicAPI {
     // It won't be executed if curveType is Undefined.
     // Params:
     // - pairs -  point pairs array encoded as (G1 point, G2 point) in bytes
+    // Returns:
+    // If result of a pairing (element of Fp12) is equal to identity - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function pairing(
         CommonTypes.Pair[] memory pairs
     ) public view curveIsDefined() returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.pairing(curveParams, pairs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formPairingInput(curveParams, pairs);
         result = EIP1962_CoreAPI.callEip1962(
             1962,
             input,
