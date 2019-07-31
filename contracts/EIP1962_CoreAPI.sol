@@ -133,11 +133,11 @@ library EIP1962_CoreAPI {
     // - lhs - first point's X and Y coordinates in G1Point struct representation
     // - rhs - second point's X and Y coordinates in G1Point struct representation
     // Returns the newly created bytes memory.
-    function g1Add(
+    function formG1AddInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G1Point memory lhs,
         CommonTypes.G1Point memory rhs
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
 
         bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
         bytes memory rhsBytes = g1PointToBytes(rhs, 2*curveParams.fieldLength);
@@ -146,18 +146,15 @@ library EIP1962_CoreAPI {
 
         bytes memory opData = getG1OpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_G1_ADD);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhsBytes);
-        data = Bytes.concat(data, rhsBytes);
+        input = Bytes.toBytesFromUInt8(OPERATION_G1_ADD);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, lhsBytes);
+        input = Bytes.concat(input, rhsBytes);
 
-        result = callEip1962(
-            1962,
-            data,
-            1 + opData.length + lhsBytes.length + rhsBytes.length,
-            lhsBytes.length
-        );
+        require(input.length == 1 + opData.length + lhsBytes.length + rhsBytes.length,
+            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhsBytes.length'");
+
+        outputLength = lhsBytes.length;
     }
 
     // Compies the G1 Mul operation result.
@@ -166,11 +163,11 @@ library EIP1962_CoreAPI {
     // - lhs - first point's X and Y coordinates in G1Point struct representation
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
-    function g1Mul(
+    function formG1MulInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G1Point memory lhs,
         bytes memory rhs
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
 
         bytes memory lhsBytes = g1PointToBytes(lhs, 2*curveParams.fieldLength);
 
@@ -178,18 +175,15 @@ library EIP1962_CoreAPI {
 
         bytes memory opData = getG1OpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_G1_MUL);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhsBytes);
-        data = Bytes.concat(data, rhs);
+        input = Bytes.toBytesFromUInt8(OPERATION_G1_MUL);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, lhsBytes);
+        input = Bytes.concat(input, rhs);
 
-        result = callEip1962(
-            1962,
-            data,
-            1 + opData.length + lhsBytes.length + rhs.length,
-            lhsBytes.length
-        );
+        require(input.length == 1 + opData.length + lhsBytes.length + rhs.length,
+            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhs.length'");
+
+        outputLength = lhsBytes.length;
     }
 
     // Compies the G1 Multiexponentiation operation result.
@@ -199,12 +193,12 @@ library EIP1962_CoreAPI {
     // - point -  point's X and Y coordinates in G1Point struct representation
     // - scalar - sсalar order of exponentiation in bytes
     // Returns the newly created bytes memory.
-    function g1MultiExp(
+    function formG1MultiExpInput(
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
         CommonTypes.G1Point memory point,
         bytes memory scalar
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
 
         bytes memory pointBytes = g1PointToBytes(point, 2*curveParams.fieldLength);
 
@@ -212,19 +206,16 @@ library EIP1962_CoreAPI {
 
         bytes memory opData = getG1OpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_G1_MULTIEXP);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
-        data = Bytes.concat(data, pointBytes);
-        data = Bytes.concat(data, scalar);
+        input = Bytes.toBytesFromUInt8(OPERATION_G1_MULTIEXP);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
+        input = Bytes.concat(input, pointBytes);
+        input = Bytes.concat(input, scalar);
 
-        result = callEip1962(
-            1962,
-            data,
-            2 + opData.length + pointBytes.length + scalar.length,
-            pointBytes.length
-        );
+        require(input.length == 2 + opData.length + pointBytes.length + scalar.length,
+            "Input length should be equal to '2 + opData.length + pointBytes.length + scalar.length'");
+
+        outputLength = pointBytes.length;
     }
 
     //
@@ -313,11 +304,11 @@ library EIP1962_CoreAPI {
     // - lhs - first point's X and Y coordinates in G2Point struct representation
     // - rhs - second point's X and Y coordinates in G2Point struct representation
     // Returns the newly created bytes memory.
-    function g2Add(
+    function formG2AddInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G2Point memory lhs,
         CommonTypes.G2Point memory rhs
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
         bytes memory lhsBytes = g2PointToBytes(lhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
         bytes memory rhsBytes = g2PointToBytes(rhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
@@ -325,18 +316,15 @@ library EIP1962_CoreAPI {
 
         bytes memory opData = getG2OpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_G2_ADD);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhsBytes);
-        data = Bytes.concat(data, rhsBytes);
+        input = Bytes.toBytesFromUInt8(OPERATION_G2_ADD);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, lhsBytes);
+        input = Bytes.concat(input, rhsBytes);
 
-        result = callEip1962(
-            1962,
-            data,
-            1 + opData.length + lhsBytes.length + rhsBytes.length,
-            lhsBytes.length
-        );
+        require(input.length == 1 + opData.length + lhsBytes.length + rhsBytes.length,
+            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhsBytes.length'");
+
+        outputLength = lhsBytes.length;
     }
 
     // Compies the G2 Mul operation result.
@@ -345,29 +333,26 @@ library EIP1962_CoreAPI {
     // - lhs - first point's X and Y coordinates in G2Point struct representation
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
-    function g2Mul(
+    function formG2MulInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.G2Point memory lhs,
         bytes memory rhs
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
         bytes memory lhsBytes = g2PointToBytes(lhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MulDataLengths(curveParams, lhsBytes, rhs);
 
         bytes memory opData = getG2OpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_G2_MUL);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, lhsBytes);
-        data = Bytes.concat(data, rhs);
+        input = Bytes.toBytesFromUInt8(OPERATION_G2_MUL);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, lhsBytes);
+        input = Bytes.concat(input, rhs);
 
-        result = callEip1962(
-            1962,
-            data,
-            1 + opData.length + lhsBytes.length + rhs.length,
-            lhsBytes.length
-        );
+        require(input.length == 1 + opData.length + lhsBytes.length + rhs.length,
+            "Input length should be equal to '1 + opData.length + lhsBytes.length + rhs.length'");
+
+        outputLength = lhsBytes.length;
     }
 
     // Compies the G2 Multiexponentiation operation result.
@@ -377,31 +362,28 @@ library EIP1962_CoreAPI {
     // - point -  point's X and Y coordinates in G2Point struct representation
     // - scalar - sсalar order of exponentiation in bytes
     // Returns the newly created bytes memory.
-    function g2MultiExp(
+    function formG2MultiExpInput(
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
         CommonTypes.G2Point memory point,
         bytes memory scalar
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
         bytes memory pointBytes = g2PointToBytes(point, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MultiExpDataLengths(curveParams, pointBytes, scalar);
 
         bytes memory opData = getG2OpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_G2_MULTIEXP);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
-        data = Bytes.concat(data, pointBytes);
-        data = Bytes.concat(data, scalar);
+        input = Bytes.toBytesFromUInt8(OPERATION_G2_MULTIEXP);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
+        input = Bytes.concat(input, pointBytes);
+        input = Bytes.concat(input, scalar);
 
-        result = callEip1962(
-            1962,
-            data,
-            2 + opData.length + pointBytes.length + scalar.length,
-            pointBytes.length
-        );
+        require(input.length == 2 + opData.length + pointBytes.length + scalar.length,
+            "Input length should be equal to '2 + opData.length + pointBytes.length + scalar.length'");
+
+        outputLength = pointBytes.length;
     }
 
     // MARK: - Pairing operation
@@ -440,16 +422,15 @@ library EIP1962_CoreAPI {
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.sign));
     }
 
-    // Compies the pairing operation result.
+    // Compies the pairing operation input and outputLength.
     // Params:
     // - curveParams - curve parameters
     // - pairs - point pairs encoded as (G1 point, G2 point) in CommonTypes.Pair struct representation
-    // Returns: if result of a pairing (element of Fp12) is equal to identity
-    //  - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
-    function pairing(
+    // Returns: pairing input and outputLength
+    function formPairingInput(
         CommonTypes.CurveParams memory curveParams,
         CommonTypes.Pair[] memory pairs
-    ) public view returns (bytes memory result) {
+    ) public pure returns (bytes memory input, uint outputLength) {
         uint8 numPairs = uint8(pairs.length);
         bytes memory pairsBytes = pairsArrayToBytes(pairs, 2*curveParams.fieldLength, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
@@ -457,18 +438,15 @@ library EIP1962_CoreAPI {
 
         bytes memory opData = getPairingOpDataInBytes(curveParams);
 
-        bytes memory data;
-        data = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
-        data = Bytes.concat(data, opData);
-        data = Bytes.concat(data, Bytes.toBytesFromUInt8(numPairs));
-        data = Bytes.concat(data, pairsBytes);
+        input = Bytes.toBytesFromUInt8(OPERATION_PAIRING);
+        input = Bytes.concat(input, opData);
+        input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
+        input = Bytes.concat(input, pairsBytes);
 
-        result = callEip1962(
-            1962,
-            data,
-            2 + opData.length + pairsBytes.length,
-            1
-        );
+        require(input.length == 2 + opData.length + pairsBytes.length,
+            "Input length should be equal to '2 + opData.length + pairsBytes.length'");
+
+        outputLength = 1;
     }
 
     // Compies the EIP-1962 contract static call result.

@@ -80,7 +80,13 @@ contract EIP1962_PublicAPI {
         CommonTypes.G1Point memory lhs,
         CommonTypes.G1Point memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.g1Add(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.formG1AddInput(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
     // Compies the G1 Mul operation result.
@@ -93,7 +99,13 @@ contract EIP1962_PublicAPI {
         CommonTypes.G1Point memory lhs,
         bytes memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.g1Mul(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g1Mul(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
     // Compies the G1 Multiexponentiation operation result.
@@ -108,7 +120,13 @@ contract EIP1962_PublicAPI {
         CommonTypes.G1Point memory point,
         bytes memory scalar
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.g1MultiExp(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g1MultiExp(curveParams, numPairs, point, scalar);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
     // Compies the G2 Add operation result.
@@ -121,7 +139,13 @@ contract EIP1962_PublicAPI {
         CommonTypes.G2Point memory lhs,
         CommonTypes.G2Point memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.g2Add(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g2Add(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
     // Compies the G2 Mul operation result.
@@ -134,7 +158,13 @@ contract EIP1962_PublicAPI {
         CommonTypes.G2Point memory lhs,
         bytes memory rhs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.g2Mul(curveParams, lhs, rhs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g2Mul(curveParams, lhs, rhs);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
     // Compies the G2 Multiexponentiation operation result.
@@ -149,7 +179,13 @@ contract EIP1962_PublicAPI {
         CommonTypes.G2Point memory point,
         bytes memory scalar
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.g2MultiExp(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.g2MultiExp(curveParams, numPairs, point, scalar);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
     // Verifies the correctness of the pairing operation parameters.
@@ -159,7 +195,13 @@ contract EIP1962_PublicAPI {
     function pairing(
         CommonTypes.Pair[] memory pairs
     ) public view curveIsDefined() returns (bytes memory result) {
-        result = EIP1962_CoreAPI.pairing(curveParams, pairs);
+        (bytes memory input, uint outputLength) = EIP1962_CoreAPI.pairing(curveParams, pairs);
+        result = EIP1962_CoreAPI.callEip1962(
+            1962,
+            input,
+            input.length,
+            outputLength
+        );
     }
 
 }
