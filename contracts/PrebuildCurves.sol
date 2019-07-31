@@ -1,7 +1,6 @@
 pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
-import {EIP1962_CoreAPI} from "../contracts/EIP1962_CoreAPI.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
 
 library PrebuildCurves {

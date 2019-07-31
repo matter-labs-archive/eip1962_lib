@@ -1,11 +1,11 @@
 pragma solidity ^0.5.1;
 pragma experimental ABIEncoderV2;
 
-import {EIP1962_CoreAPI} from "../contracts/EIP1962_CoreAPI.sol";
+import {GenericEllipticCurve} from "../contracts/GenericEllipticCurve.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
+import {HelpersForTests} from "../test/HelpersForTests.sol";
 
-contract TestCore {
+contract TestInputs {
 
     CommonTypes.CurveParams curveParams;
 
@@ -26,7 +26,7 @@ contract TestCore {
             X: p2x,
             Y: p2y
         });
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formG1AddInput(curveParams, p1, p2);
+        (bytes memory input, uint _) = GenericEllipticCurve.formG1AddInput(curveParams, p1, p2);
         return HelpersForTests.equal(input, correctInput);
     }
 
@@ -39,7 +39,7 @@ contract TestCore {
             X: px,
             Y: py
         });
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formG1MulInput(curveParams, p, factor);
+        (bytes memory input, uint _) = GenericEllipticCurve.formG1MulInput(curveParams, p, factor);
         return HelpersForTests.equal(input, correctInput);
     }
 
@@ -53,7 +53,7 @@ contract TestCore {
             X: px,
             Y: py
         });
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formG1MultiExpInput(curveParams, numPairs, p, order);
+        (bytes memory input, uint _) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, p, order);
         return HelpersForTests.equal(input, correctInput);
     }
 
@@ -72,7 +72,7 @@ contract TestCore {
             X: [p2x0, p2x1],
             Y: [p2y0, p2y1]
         });
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formG2AddInput(curveParams, p1, p2);
+        (bytes memory input, uint _) = GenericEllipticCurve.formG2AddInput(curveParams, p1, p2);
         return HelpersForTests.equal(input, correctInput);
     }
 
@@ -86,7 +86,7 @@ contract TestCore {
             X: [px0, px1],
             Y: [py0, py1]
         });
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formG2MulInput(curveParams, p, factor);
+        (bytes memory input, uint _) = GenericEllipticCurve.formG2MulInput(curveParams, p, factor);
         return HelpersForTests.equal(input, correctInput);
     }
 
@@ -101,7 +101,7 @@ contract TestCore {
             X: [px0, px1],
             Y: [py0, py1]
         });
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formG2MultiExpInput(curveParams, numPairs, p, order);
+        (bytes memory input, uint _) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, p, order);
         return HelpersForTests.equal(input, correctInput);
     }
 
@@ -136,7 +136,7 @@ contract TestCore {
         resPairs[0] = pair1;
         resPairs[1] = pair2;
 
-        (bytes memory input, uint _) = EIP1962_CoreAPI.formPairingInput(curveParams, resPairs);
+        (bytes memory input, uint _) = GenericEllipticCurve.formPairingInput(curveParams, resPairs);
         return HelpersForTests.equal(input, correctInput);
     }
 

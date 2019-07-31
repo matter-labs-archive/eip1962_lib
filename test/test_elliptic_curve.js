@@ -3,7 +3,7 @@ const chai = require('chai');
 const {deployContract, solidity} = require('ethereum-waffle');
 const ethers = require('ethers');
 
-const TEST_CONTRACT = require('../build/TestAPI');
+const TEST_CONTRACT = require('../build/TestEllipticCurve');
 
 chai.use(solidity);
 const {expect} = chai;
@@ -19,7 +19,7 @@ describe('Test API', () => {
       let etherString = ethers.utils.formatEther(balance);
       console.log("Wallet balance: " + etherString);
     });
-    test = await deployContract(wallet, TEST_CONTRACT, [contract.CommonTypes.CurveTypes.Bls12_381], {
+    test = await deployContract(wallet, TEST_CONTRACT, [], {
       gasLimit: 8000000
     });
     expect(test.address).to.be.properAddress;

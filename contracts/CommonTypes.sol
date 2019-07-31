@@ -45,10 +45,8 @@ library CommonTypes {
     // Enum describes possible curves.
     // 'Custom' is user defined curve.
     // 'Undefined' curve is undefined;
-    enum CurveTypes {
+    enum PrebuildCurveTypes {
         Bn256,
-        Bls12_381,
-        Custom,
-        Undefined
+        Bls12_381
     }
 }

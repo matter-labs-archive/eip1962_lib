@@ -3,9 +3,9 @@ pragma experimental ABIEncoderV2;
 
 import {EllipticCurve} from "../contracts/EllipticCurve.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
+import {HelpersForTests} from "../test/HelpersForTests.sol";
 
-contract TestEllipticCurve {
+contract TestABI {
 
     EllipticCurve elCurve;
 
