@@ -243,11 +243,11 @@ library EIP1962_CoreAPI {
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(
-            lhs.length == curveParams.extensionDegree * curveParams.fieldLength,
+            lhs.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
             "lhs should be equal to extensionDegree * fieldLength"
         );
         require(
-            rhs.length == curveParams.extensionDegree * curveParams.fieldLength,
+            rhs.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
             "rhs should be equal to extensionDegree * fieldLength"
         );
     }
@@ -264,11 +264,11 @@ library EIP1962_CoreAPI {
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(
-            lhs.length == curveParams.extensionDegree * curveParams.fieldLength,
+            lhs.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
             "lhs should be equal to extensionDegree * fieldLength"
         );
         require(
-            rhs.length == curveParams.groupOrderLength,
+            rhs.length == 2 * curveParams.groupOrderLength,
             "rhs should be equal to groupOrderLength"
         );
     }
@@ -285,11 +285,11 @@ library EIP1962_CoreAPI {
     ) internal pure {
         verifyCorrectCurveParamsLengths(curveParams);
         require(
-            point.length == curveParams.extensionDegree * curveParams.fieldLength,
+            point.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
             "lhs should be equal to extensionDegree * fieldLength"
         );
         require(
-            scalar.length == curveParams.groupOrderLength,
+            scalar.length == 2 * curveParams.groupOrderLength,
             "rhs should be equal to groupOrderLength"
         );
     }
@@ -318,8 +318,8 @@ library EIP1962_CoreAPI {
         CommonTypes.G2Point memory lhs,
         CommonTypes.G2Point memory rhs
     ) public view returns (bytes memory result) {
-        bytes memory lhsBytes = g2PointToBytes(lhs, curveParams.extensionDegree*curveParams.fieldLength);
-        bytes memory rhsBytes = g2PointToBytes(rhs, curveParams.extensionDegree*curveParams.fieldLength);
+        bytes memory lhsBytes = g2PointToBytes(lhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
+        bytes memory rhsBytes = g2PointToBytes(rhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2AddDataLengths(curveParams, lhsBytes, rhsBytes);
 
@@ -350,7 +350,7 @@ library EIP1962_CoreAPI {
         CommonTypes.G2Point memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
-        bytes memory lhsBytes = g2PointToBytes(lhs, curveParams.extensionDegree*curveParams.fieldLength);
+        bytes memory lhsBytes = g2PointToBytes(lhs, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MulDataLengths(curveParams, lhsBytes, rhs);
 
@@ -383,7 +383,7 @@ library EIP1962_CoreAPI {
         CommonTypes.G2Point memory point,
         bytes memory scalar
     ) public view returns (bytes memory result) {
-        bytes memory pointBytes = g2PointToBytes(point, curveParams.extensionDegree*curveParams.fieldLength);
+        bytes memory pointBytes = g2PointToBytes(point, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectG2MultiExpDataLengths(curveParams, pointBytes, scalar);
 
@@ -451,7 +451,7 @@ library EIP1962_CoreAPI {
         CommonTypes.Pair[] memory pairs
     ) public view returns (bytes memory result) {
         uint8 numPairs = uint8(pairs.length);
-        bytes memory pairsBytes = pairsArrayToBytes(pairs, 2*curveParams.fieldLength, curveParams.extensionDegree*curveParams.fieldLength);
+        bytes memory pairsBytes = pairsArrayToBytes(pairs, 2*curveParams.fieldLength, 2*curveParams.extensionDegree*curveParams.fieldLength);
 
         verifyCorrectPairingPairsLengths(curveParams, pairsBytes, numPairs);
 
