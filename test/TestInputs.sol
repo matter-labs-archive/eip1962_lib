@@ -14,7 +14,7 @@ contract TestInputs {
         curveParams = PrebuildCurves.bn256();
     }
 
-    function testFormAddInput(
+    function testFormAddG1Input(
             uint p1x, uint p1y,
             uint p2x, uint p2y,
             bytes memory correctInput
