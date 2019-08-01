@@ -98,7 +98,7 @@ library LengthsVerifier {
             "lhs should be equal to 2 * extensionDegree * fieldLength"
         );
         require(
-            uint(rhs.length) == 2 * uint(curveParams.groupOrderLength),
+            uint(rhs.length) == uint(curveParams.groupOrderLength),
             "rhs should be equal to groupOrderLength"
         );
     }
