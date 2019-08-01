@@ -8,11 +8,17 @@ import {CommonTypes} from "../contracts/CommonTypes.sol";
 library GenericEllipticCurveConvenientAPI {
 
     function getParamsForCurve(CommonTypes.PrebuildCurveTypes curveType) internal pure returns (CommonTypes.CurveParams memory) {
-        if (curveType == CommonTypes.PrebuildCurveTypes.Bn256) {
-            return PrebuildCurves.bn256();
+        if (curveType == CommonTypes.PrebuildCurveTypes.BLS12_384_m) {
+            return PrebuildCurves.bls12_384_m();
         }
-        if (curveType == CommonTypes.PrebuildCurveTypes.Bls12_381) {
-            return PrebuildCurves.bls12_381();
+        if (curveType == CommonTypes.PrebuildCurveTypes.BLS12_384_d) {
+            return PrebuildCurves.bls12_384_d();
+        }
+        if (curveType == CommonTypes.PrebuildCurveTypes.BLS12_381_m) {
+            return PrebuildCurves.bls12_381_m();
+        }
+        if (curveType == CommonTypes.PrebuildCurveTypes.BLS12_381_d) {
+            return PrebuildCurves.bls12_381_d();
         }
     }
 

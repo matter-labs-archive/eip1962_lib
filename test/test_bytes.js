@@ -16,7 +16,7 @@ describe('Test Bytes', () => {
 
   beforeEach(async () => {
     test = await deployContract(wallet, TEST_CONTRACT, [], {
-      gasLimit: 4700000
+      gasLimit: 8000000
     });
     expect(test.address).to.be.properAddress;
     console.log("Test address:" + test.address);
@@ -24,52 +24,52 @@ describe('Test Bytes', () => {
   });
 
   it('Equal', async () => {
-    let result = await contract.testEqual(["0x00", "0xaa", "0xff"], ["0x00", "0xaa", "0xff"]);
+    let result = await contract.testEqual();
     expect(result).to.eq(true);
   });
 
   it('Not equal', async () => {
-    let result = await contract.testEqual(["0x00", "0xaa", "0xf1"], ["0x00", "0xaa", "0xff"]);
+    let result = await contract.testNotEqual();
     expect(result).to.eq(false);
   });
 
   it('Slice correct', async () => {
-    let result = await contract.testSliceCorrect(["0x00", "0xaa", "0xf1", "0xab", "0x51"], 2, 2, ["0xf1", "0xab"]);
+    let result = await contract.testSliceCorrect();
     expect(result).to.eq(true);
   });
 
   it('Slice not correct', async () => {
-    let result = await contract.testSliceCorrect(["0x00", "0xaa", "0xf1", "0xab", "0x51"], 2, 2, ["0xaa", "0xf1"]);
+    let result = await contract.testSliceNotCorrect();
     expect(result).to.eq(false);
   });
 
   it('To bytes from uint correct', async () => {
-    let result = await contract.testToBytesFromUIntSuccess(257, 4, ["0x00",  "0x00",  "0x01",  "0x01"]);
+    let result = await contract.testToBytesFromUIntCorrect();
     expect(result).to.eq(true);
   });
 
   it('To bytes from uint not correct', async () => {
-    let result = await contract.testToBytesFromUIntCorrect(259, 4, ["0x00",  "0x00",  "0x01",  "0x01"]);
+    let result = await contract.testToBytesFromUIntNotCorrect();
     expect(result).to.eq(false);
   });
 
   it('To bytes from uint8 correct', async () => {
-    let result = await contract.testToBytesFromUInt8Success(128, ["0x80"]);
+    let result = await contract.testToBytesFromUInt8Correct();
     expect(result).to.eq(true);
   });
 
   it('To bytes from uint8 not correct', async () => {
-    let result = await contract.testToBytesFromUInt8Correct(128, ["0x81"]);
+    let result = await contract.testToBytesFromUInt8NotCorrect();
     expect(result).to.eq(false);
   });
 
   it('Concat correct', async () => {
-    let result = await contract.testConcatEqual(["0x02", "0x82"], ["0x12", "0xf2"], ["0x02", "0x82", "0x12", "0xf2"]);
+    let result = await contract.testConcatEqual();
     expect(result).to.eq(true);
   });
 
   it('Concat not correct', async () => {
-    let result = await contract.testConcatEqual(["0x02", "0x82"], ["0x12", "0xf2"], ["0x01", "0x82", "0x12", "0xf2"]);
+    let result = await contract.testConcatNotEqual();
     expect(result).to.eq(false);
   });
 });

@@ -7,24 +7,24 @@ import {CommonTypes} from "../contracts/CommonTypes.sol";
 library GenericEllipticCurve {
 
     // MARK: - Supported operations with codes
-    uint8 private constant OPERATION_G1_ADD = 0x01;
-    uint8 private constant OPERATION_G1_MUL = 0x02;
-    uint8 private constant OPERATION_G1_MULTIEXP = 0x03;
-    uint8 private constant OPERATION_G2_ADD = 0x04;
-    uint8 private constant OPERATION_G2_MUL = 0x05;
-    uint8 private constant OPERATION_G2_MULTIEXP = 0x06;
-    uint8 private constant OPERATION_PAIRING = 0x07;
+    uint8 internal constant OPERATION_G1_ADD = 0x01;
+    uint8 internal constant OPERATION_G1_MUL = 0x02;
+    uint8 internal constant OPERATION_G1_MULTIEXP = 0x03;
+    uint8 internal constant OPERATION_G2_ADD = 0x04;
+    uint8 internal constant OPERATION_G2_MUL = 0x05;
+    uint8 internal constant OPERATION_G2_MULTIEXP = 0x06;
+    uint8 internal constant OPERATION_PAIRING = 0x07;
 
     // Compies G1 point into a new bytes memory.
     // Returns the newly created bytes memory.
-    function g1PointToBytes(CommonTypes.G1Point memory point, uint pointLength) private pure returns (bytes memory result) {
+    function g1PointToBytes(CommonTypes.G1Point memory point, uint pointLength) internal pure returns (bytes memory result) {
         result = Bytes.toBytesFromUInt(point.X, pointLength/2);
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y, pointLength/2));
     }
 
     // Compies G2 point into a new bytes memory.
     // Returns the newly created bytes memory.
-    function g2PointToBytes(CommonTypes.G2Point memory point, uint pointLength) private pure returns (bytes memory result) {
+    function g2PointToBytes(CommonTypes.G2Point memory point, uint pointLength) internal pure returns (bytes memory result) {
         result = Bytes.toBytesFromUInt(point.X[0], pointLength/4);
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.X[1], pointLength/4));
         result = Bytes.concat(result, Bytes.toBytesFromUInt(point.Y[0], pointLength/4));
@@ -36,7 +36,7 @@ library GenericEllipticCurve {
     function pairToBytes(
         CommonTypes.Pair memory pair,
         uint g1PointLength,
-        uint g2PointLength) private pure returns (bytes memory result) {
+        uint g2PointLength) internal pure returns (bytes memory result) {
         result = g1PointToBytes(pair.g1p, g1PointLength);
         result = Bytes.concat(result, g2PointToBytes(pair.g2p, g2PointLength));
     }
@@ -47,7 +47,7 @@ library GenericEllipticCurve {
         CommonTypes.Pair[] memory pairs,
         uint g1PointLength,
         uint g2PointLength
-    ) private pure returns (bytes memory result) {
+    ) internal pure returns (bytes memory result) {
         for (uint i = 0; i < pairs.length; i++) {
             result = Bytes.concat(result, pairToBytes(pairs[i], g1PointLength, g2PointLength));
         }
@@ -59,7 +59,7 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for all G1 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory) {
+    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(2 + 3 * curveParams.fieldLength + curveParams.groupOrderLength);
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -161,7 +161,7 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for all G2 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory) {
+    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(3 + 4 * curveParams.fieldLength + curveParams.groupOrderLength);
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -260,7 +260,7 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for pairing operation based on curve parameters.
     // Returns the newly created bytes memory.
-    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) private pure returns (bytes memory) {
+    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(6 + 6 * curveParams.fieldLength + curveParams.groupOrderLength + curveParams.xLength);
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));

@@ -27,38 +27,53 @@ describe('Test Inputs', () => {
     contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
   });
 
-  it('G1 Add Input', async () => {
-    let result = await contract.testFormAddG1Input();
+  it('G1 op_data for BLS12-384-M curve', async () => {
+    let result = await contract.testG1OpDataBLS12_384_M();
     expect(result).to.eq(true);
   });
 
-  it('G1 Mul Input', async () => {
-    let result = await contract.testFormMulG1Input();
+  it('G2 op_data for BLS12-384-M curve', async () => {
+    let result = await contract.testG2OpDataBLS12_384_M();
     expect(result).to.eq(true);
   });
 
-  it('G1 MultiExp Input', async () => {
-    let result = await contract.testFormMultiExpG1Input();
+  it('Pairing op_data for BLS12-384-M curve', async () => {
+    let result = await contract.testPairingOpDataBLS12_384_M();
     expect(result).to.eq(true);
   });
 
-  it('G2 Add Input', async () => {
-    let result = await contract.testFormAddG2Input();
-    expect(result).to.eq(true);
-  });
+  // it('G1 Add Input', async () => {
+  //   let result = await contract.testFormAddG1Input();
+  //   expect(result).to.eq(true);
+  // });
 
-  it('G2 Mul Input', async () => {
-    let result = await contract.testFormMulG2Input();
-    expect(result).to.eq(true);
-  });
+  // it('G1 Mul Input', async () => {
+  //   let result = await contract.testFormMulG1Input();
+  //   expect(result).to.eq(true);
+  // });
 
-  it('G2 MultiExp Input', async () => {
-    let result = await contract.testFormMultiExpG2Input();
-    expect(result).to.eq(true);
-  });
+  // it('G1 MultiExp Input', async () => {
+  //   let result = await contract.testFormMultiExpG1Input();
+  //   expect(result).to.eq(true);
+  // });
 
-  it('Pairing Input', async () => {
-    let result = await contract.testFormPairingInput();
-    expect(result).to.eq(true);
-  });
+  // it('G2 Add Input', async () => {
+  //   let result = await contract.testFormAddG2Input();
+  //   expect(result).to.eq(true);
+  // });
+
+  // it('G2 Mul Input', async () => {
+  //   let result = await contract.testFormMulG2Input();
+  //   expect(result).to.eq(true);
+  // });
+
+  // it('G2 MultiExp Input', async () => {
+  //   let result = await contract.testFormMultiExpG2Input();
+  //   expect(result).to.eq(true);
+  // });
+
+  // it('Pairing Input', async () => {
+  //   let result = await contract.testFormPairingInput();
+  //   expect(result).to.eq(true);
+  // });
 });

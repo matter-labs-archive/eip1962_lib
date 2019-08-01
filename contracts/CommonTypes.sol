@@ -46,7 +46,9 @@ library CommonTypes {
     // 'Custom' is user defined curve.
     // 'Undefined' curve is undefined;
     enum PrebuildCurveTypes {
-        Bn256,
-        Bls12_381
+        BLS12_384_m,
+        BLS12_384_d,
+        BLS12_381_m,
+        BLS12_381_d
     }
 }

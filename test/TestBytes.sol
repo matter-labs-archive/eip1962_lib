@@ -5,41 +5,67 @@ import {HelpersForTests} from "../test/HelpersForTests.sol";
 
 contract TestBytes {
 
-    function testEqual(bytes memory lhs, bytes memory rhs) public pure returns (bool) {
-        return HelpersForTests.equal(lhs, rhs);
+    function testEqual() public pure returns (bool) {
+        return HelpersForTests.equal(hex"00aaff", hex"00aaff");
     }
 
-    function testSliceCorrect(
-        bytes memory slice,
-        uint start,
-        uint length,
-        bytes memory correctResult
-    )  public pure returns (bool) {
+    function testNotEqual() public pure returns (bool) {
+        return HelpersForTests.equal(hex"00aaf1", hex"00aaff");
+    }
+
+    function testSliceCorrect()  public pure returns (bool) {
         return HelpersForTests.equal(
-            Bytes.slice(slice, start, length),
-            correctResult
+            Bytes.slice(hex"00aaf1ab51", 2, 2),
+            hex"f1ab"
         );
     }
 
-    function testToBytesFromUIntCorrect(uint number, uint bytesLength, bytes memory correctResult) public pure returns (bool) {
+    function testSliceNotCorrect()  public pure returns (bool) {
         return HelpersForTests.equal(
-            Bytes.toBytesFromUInt(number, bytesLength),
-            correctResult
+            Bytes.slice(hex"00aaf1ab51", 2, 2),
+            hex"aaab"
         );
     }
 
-    function testToBytesFromUInt8Correct(uint8 number, bytes memory correctResult) public pure returns (bool) {
+    function testToBytesFromUIntCorrect() public pure returns (bool) {
         return HelpersForTests.equal(
-            Bytes.toBytesFromUInt8(number),
-            correctResult
+            Bytes.toBytesFromUInt(257, 4),
+            hex"00000101"
         );
     }
 
-    function testConcatEqual(bytes memory firstBytes, bytes memory secondBytes, bytes memory correctResult) public pure returns (bool) {
-        bytes memory resultBytes = Bytes.concat(firstBytes, secondBytes);
+    function testToBytesFromUIntNotCorrect() public pure returns (bool) {
         return HelpersForTests.equal(
-            resultBytes,
-            correctResult
+            Bytes.toBytesFromUInt(259, 4),
+            hex"00000101"
+        );
+    }
+
+    function testToBytesFromUInt8Correct() public pure returns (bool) {
+        return HelpersForTests.equal(
+            Bytes.toBytesFromUInt8(128),
+            hex"80"
+        );
+    }
+
+    function testToBytesFromUInt8NotCorrect() public pure returns (bool) {
+        return HelpersForTests.equal(
+            Bytes.toBytesFromUInt8(128),
+            hex"81"
+        );
+    }
+
+    function testConcatEqual() public pure returns (bool) {
+        return HelpersForTests.equal(
+            Bytes.concat(hex"0282", hex"12f2"),
+            hex"028212f2"
+        );
+    }
+
+    function testConcatNotEqual() public pure returns (bool) {
+        return HelpersForTests.equal(
+            Bytes.concat(hex"0282", hex"12f2"),
+            hex"018212f2"
         );
     }
 }
