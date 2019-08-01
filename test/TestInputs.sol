@@ -83,114 +83,63 @@ contract TestInputs {
         return HelpersForTests.equal(input, correctInput);
     }
 
-    // function testFormMulG1Input(
-    //     uint px, uint py,
-    //     bytes memory factor,
-    //     bytes memory correctInput
-    // ) public view returns (bool) {
-    //     CommonTypes.G1Point memory p = CommonTypes.G1Point({
-    //         X: px,
-    //         Y: py
-    //     });
-    //     (bytes memory input, uint _) = GenericEllipticCurve.formG1MulInput(curveParams, p, factor);
-    //     return HelpersForTests.equal(input, correctInput);
-    // }
+    function testAddG2InputLengthsBLS12_384_M() public view returns (bool) {
+        bytes memory p1 = hex"0101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc170113";
+        bytes memory p2 = hex"b496c3cbe37013741bd46bd014a14dac81f313a8223a8bc7c5e636ad4d5f8b53161f3518a47c220ed0bfe5139a95777c6d380a370d13539073153fc964680e0eaba50a5e4ecb4740c2af8c9cead6cefd12c4979577acc1542323477f98f02d74449321aaad1880956b33d3f9c1b4937e1105ae93c3bed0bd4cfd7340bba02801331245f90a64083cf57a2fc91293d0d172dc549af6c38cfb4df6e5ead8a9b129b51bc73fe32fea6a4947697e4e40c9827700dc5d8604b16885d8681fe0e0b0f90cf81aca";
+        LengthsVerifier.verifyCorrectG2AddDataLengths(bls12_384_mul_params, p1, p2);
+        return true;
+    }
 
-    // function testFormMultiExpG1Input(
-    //     uint8 numPairs,
-    //     uint px, uint py,
-    //     bytes memory order,
-    //     bytes memory correctInput
-    // ) public view returns (bool) {
-    //     CommonTypes.G1Point memory p = CommonTypes.G1Point({
-    //         X: px,
-    //         Y: py
-    //     });
-    //     (bytes memory input, uint _) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, p, order);
-    //     return HelpersForTests.equal(input, correctInput);
-    // }
+    function testMulG2InputLengthsBLS12_384_M() public view returns (bool) {
+        bytes memory p = hex"0101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc170113";
+        bytes memory mul = hex"01d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c19";
+        LengthsVerifier.verifyCorrectG2MulDataLengths(bls12_384_mul_params, p, mul);
+        return true;
+    }
 
-    // function testFormAddG2Input(
-    //     uint p1x0, uint p1x1,
-    //     uint p1y0, uint p1y1,
-    //     uint p2x0, uint p2x1,
-    //     uint p2y0, uint p2y1,
-    //     bytes memory correctInput
-    // ) public view returns (bool) {
-    //     CommonTypes.G2Point memory p1 = CommonTypes.G2Point({
-    //         X: [p1x0, p1x1],
-    //         Y: [p1y0, p1y1]
-    //     });
-    //     CommonTypes.G2Point memory p2 = CommonTypes.G2Point({
-    //         X: [p2x0, p2x1],
-    //         Y: [p2y0, p2y1]
-    //     });
-    //     (bytes memory input, uint _) = GenericEllipticCurve.formG2AddInput(curveParams, p1, p2);
-    //     return HelpersForTests.equal(input, correctInput);
-    // }
+    function testMultiExpG2InputLengthsBLS12_384_M() public view returns (bool) {
+        uint8 numPairs = 3;
+        bytes memory pairs = hex"0101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc17011301d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c190101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc17011301d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c190101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc17011301d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c19";
+        LengthsVerifier.verifyCorrectG2MultiExpDataLengths(bls12_384_mul_params, numPairs, pairs);
+        return true;
+    }
 
-    // function testFormMulG2Input(
-    //     uint px0, uint px1,
-    //     uint py0, uint py1,
-    //     bytes memory factor,
-    //     bytes memory correctInput
-    // ) public view returns (bool) {
-    //     CommonTypes.G2Point memory p = CommonTypes.G2Point({
-    //         X: [px0, px1],
-    //         Y: [py0, py1]
-    //     });
-    //     (bytes memory input, uint _) = GenericEllipticCurve.formG2MulInput(curveParams, p, factor);
-    //     return HelpersForTests.equal(input, correctInput);
-    // }
+    function testFormAddG2InputBLS12_384_M() public view returns (bool) {
+        bytes memory correctInput = hex"0431026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045d02026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012103c192577dfb697d258e5f48f4c3f36bb518d0ea9b498ca3559dfb03a2c685a5290101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc17011301d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c19";
+        bytes memory p1 = hex"0101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc170113";
+        bytes memory p2 = hex"b496c3cbe37013741bd46bd014a14dac81f313a8223a8bc7c5e636ad4d5f8b53161f3518a47c220ed0bfe5139a95777c6d380a370d13539073153fc964680e0eaba50a5e4ecb4740c2af8c9cead6cefd12c4979577acc1542323477f98f02d74449321aaad1880956b33d3f9c1b4937e1105ae93c3bed0bd4cfd7340bba02801331245f90a64083cf57a2fc91293d0d172dc549af6c38cfb4df6e5ead8a9b129b51bc73fe32fea6a4947697e4e40c9827700dc5d8604b16885d8681fe0e0b0f90cf81aca";
+        (bytes memory input, uint _) = GenericEllipticCurve.formG2AddInput(bls12_384_mul_params, p1, p2);
+        return HelpersForTests.equal(input, correctInput);
+    }
 
-    // function testFormMultiExpG2Input(
-    //     uint8 numPairs,
-    //     uint px0, uint px1,
-    //     uint py0, uint py1,
-    //     bytes memory order,
-    //     bytes memory correctInput
-    // ) public view returns (bool) {
-    //     CommonTypes.G2Point memory p = CommonTypes.G2Point({
-    //         X: [px0, px1],
-    //         Y: [py0, py1]
-    //     });
-    //     (bytes memory input, uint _) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, p, order);
-    //     return HelpersForTests.equal(input, correctInput);
-    // }
+    function testFormMulG2InputBLS12_384_M() public view returns (bool) {
+        bytes memory correctInput = hex"0531026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045d02026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012103c192577dfb697d258e5f48f4c3f36bb518d0ea9b498ca3559dfb03a2c685a5290101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc17011301d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c19";
+        bytes memory p = hex"0101ffde193f98185f975ffb1372580fd7a93194e7a50a5cf7852f292455e0a34451c82bd7901a3de0c2a3479e716cbbdc00ac30a79956814c1a0e970fb255184f367d122abb6f3f9627ac2c2c97a68379d16883dfaf2549e3a3dce33f3bea1247df01460c7673ee5b7a2db0e9452d1b7fbb502e3f999f1b1dcd31e7062346408863c7f973b94e34c8b55c32bf5e829c664688005aa657b27ade7a8f4b1cabea24ce403f3ce23f7274e2569c90bcb97a4c04434c78438560cec76719bde389aedc170113";
+        bytes memory mul = hex"01d82faa3935ba82cc72fca999eaa64a3e13f4b70e08eae12074e1841ea7e78c19";
+        (bytes memory input, uint _) = GenericEllipticCurve.formG2MulInput(bls12_384_mul_params, p, mul);
+        return HelpersForTests.equal(input, correctInput);
+    }
 
-    // function testFormPairingInput(
-    //     uint[2] memory g1p1,
-    //     uint[4] memory g2p1,
-    //     uint[2] memory g1p2,
-    //     uint[4] memory g2p2,
-    //     bytes memory correctInput
-    // ) public view returns (bool) {
-    //     CommonTypes.Pair memory pair1 = CommonTypes.Pair({
-    //         g1p: CommonTypes.G1Point({
-    //             X: g1p1[0],
-    //             Y: g1p1[1]
-    //         }),
-    //         g2p: CommonTypes.G2Point({
-    //             X: [g2p1[0], g2p1[1]],
-    //             Y: [g2p1[2], g2p1[3]]
-    //         })
-    //     });
-    //     CommonTypes.Pair memory pair2 = CommonTypes.Pair({
-    //         g1p: CommonTypes.G1Point({
-    //             X: g1p2[0],
-    //             Y: g1p2[1]
-    //         }),
-    //         g2p: CommonTypes.G2Point({
-    //             X: [g2p2[0], g2p2[1]],
-    //             Y: [g2p2[2], g2p2[3]]
-    //         })
-    //     });
-    //     CommonTypes.Pair[] memory resPairs = new CommonTypes.Pair[](2);
-    //     resPairs[0] = pair1;
-    //     resPairs[1] = pair2;
+    function testFormMultiExpG2InputBLS12_384_M() public view returns (bool) {
+        bytes memory correctInput = hex"0631026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045d02026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012103c192577dfb697d258e5f48f4c3f36bb518d0ea9b498ca3559dfb03a2c685a5290300b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf4901a377718a6300d8dfa68b483f26b2d31c2501427bf56373224e9a7e9d15cabfc900b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf4901a377718a6300d8dfa68b483f26b2d31c2501427bf56373224e9a7e9d15cabfc900b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf4901a377718a6300d8dfa68b483f26b2d31c2501427bf56373224e9a7e9d15cabfc9";
+        uint8 numPairs = 3;
+        bytes memory pairs = hex"00b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf4901a377718a6300d8dfa68b483f26b2d31c2501427bf56373224e9a7e9d15cabfc900b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf4901a377718a6300d8dfa68b483f26b2d31c2501427bf56373224e9a7e9d15cabfc900b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf4901a377718a6300d8dfa68b483f26b2d31c2501427bf56373224e9a7e9d15cabfc9";
+        (bytes memory input, uint _) = GenericEllipticCurve.formG2MultiExpInput(bls12_384_mul_params, numPairs, pairs);
+        return HelpersForTests.equal(input, correctInput);
+    }
 
-    //     (bytes memory input, uint _) = GenericEllipticCurve.formPairingInput(curveParams, resPairs);
-    //     return HelpersForTests.equal(input, correctInput);
-    // }
+    function testPairingInputLengthsBLS12_384_M() public view returns (bool) {
+        uint8 numPairs = 2;
+        bytes memory pairs = hex"000ee7950a41f0c887ca93b20ca08a39440ae6e8ed83e01709611584526cecb777c3ab3b9ff9d3b88fbe108fc916396d8f009445fc17ee70f2b9e96db6d4225a9f577d78de557b1ac0fe47f629f93e3427fecf9fa176ff34d2c757004d1ea7b67aff007f5a068d5d9bc448cf9ce3d6fa287d1f01ec5c1ec86a5b2ae55b1c71d7a4281f83b4d2356613f3113bd858a41e9fb10900cdf67dfe485c8c42aeca5c2dac457ab1dfd98df8f19d09bb4a194fc4966418f84a218ead3d6100e567124ea5c106fb1b00399865a965906250a2cb48abd2e1653b41604f3aa2f376539940c4982a4f6f26bcb89bd58cda247bdb02a51636cc5e64024c816df1882a1c2829c6af47014157efb241de61aeaa06d3b8d89c0953ac1e94857c15f2497e0ea3eb6ff80362cb3c0b000ee7950a41f0c887ca93b20ca08a39440ae6e8ed83e01709611584526cecb777c3ab3b9ff9d3b88fbe108fc916396d8f01d8ed2364fb5cd32aa405f819ce4738a009929a2acbd16a012938b07f95ca1ae0e95e644d7bb38de900170b1c39b9895e007f5a068d5d9bc448cf9ce3d6fa287d1f01ec5c1ec86a5b2ae55b1c71d7a4281f83b4d2356613f3113bd858a41e9fb10900cdf67dfe485c8c42aeca5c2dac457ab1dfd98df8f19d09bb4a194fc4966418f84a218ead3d6100e567124ea5c106fb1b00399865a965906250a2cb48abd2e1653b41604f3aa2f376539940c4982a4f6f26bcb89bd58cda247bdb02a51636cc5e64024c816df1882a1c2829c6af47014157efb241de61aeaa06d3b8d89c0953ac1e94857c15f2497e0ea3eb6ff80362cb3c0b";
+        LengthsVerifier.verifyCorrectPairingPairsLengths(bls12_384_mul_params, pairs, numPairs);
+        return true;
+    }
 
+    function testFormPairingInputBLS12_384_M() public view returns (bool) {
+        bytes memory correctInput = hex"070131026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045d00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000012103c192577dfb697d258e5f48f4c3f36bb518d0ea9b498ca3559dfb03a2c685a529026d331f7ce9cdc5e48d73aeedf0a1d7f7870b788046ec2aff712eda78d3fe42dfb8fe05c47ae860b05717583ae170045b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010109016463d0693ad8bbad0002000ee7950a41f0c887ca93b20ca08a39440ae6e8ed83e01709611584526cecb777c3ab3b9ff9d3b88fbe108fc916396d8f009445fc17ee70f2b9e96db6d4225a9f577d78de557b1ac0fe47f629f93e3427fecf9fa176ff34d2c757004d1ea7b67aff007f5a068d5d9bc448cf9ce3d6fa287d1f01ec5c1ec86a5b2ae55b1c71d7a4281f83b4d2356613f3113bd858a41e9fb10900cdf67dfe485c8c42aeca5c2dac457ab1dfd98df8f19d09bb4a194fc4966418f84a218ead3d6100e567124ea5c106fb1b00399865a965906250a2cb48abd2e1653b41604f3aa2f376539940c4982a4f6f26bcb89bd58cda247bdb02a51636cc5e64024c816df1882a1c2829c6af47014157efb241de61aeaa06d3b8d89c0953ac1e94857c15f2497e0ea3eb6ff80362cb3c0b000ee7950a41f0c887ca93b20ca08a39440ae6e8ed83e01709611584526cecb777c3ab3b9ff9d3b88fbe108fc916396d8f01d8ed2364fb5cd32aa405f819ce4738a009929a2acbd16a012938b07f95ca1ae0e95e644d7bb38de900170b1c39b9895e007f5a068d5d9bc448cf9ce3d6fa287d1f01ec5c1ec86a5b2ae55b1c71d7a4281f83b4d2356613f3113bd858a41e9fb10900cdf67dfe485c8c42aeca5c2dac457ab1dfd98df8f19d09bb4a194fc4966418f84a218ead3d6100e567124ea5c106fb1b00399865a965906250a2cb48abd2e1653b41604f3aa2f376539940c4982a4f6f26bcb89bd58cda247bdb02a51636cc5e64024c816df1882a1c2829c6af47014157efb241de61aeaa06d3b8d89c0953ac1e94857c15f2497e0ea3eb6ff80362cb3c0b";
+        uint8 numPairs = 2;
+        bytes memory pairs = hex"000ee7950a41f0c887ca93b20ca08a39440ae6e8ed83e01709611584526cecb777c3ab3b9ff9d3b88fbe108fc916396d8f009445fc17ee70f2b9e96db6d4225a9f577d78de557b1ac0fe47f629f93e3427fecf9fa176ff34d2c757004d1ea7b67aff007f5a068d5d9bc448cf9ce3d6fa287d1f01ec5c1ec86a5b2ae55b1c71d7a4281f83b4d2356613f3113bd858a41e9fb10900cdf67dfe485c8c42aeca5c2dac457ab1dfd98df8f19d09bb4a194fc4966418f84a218ead3d6100e567124ea5c106fb1b00399865a965906250a2cb48abd2e1653b41604f3aa2f376539940c4982a4f6f26bcb89bd58cda247bdb02a51636cc5e64024c816df1882a1c2829c6af47014157efb241de61aeaa06d3b8d89c0953ac1e94857c15f2497e0ea3eb6ff80362cb3c0b000ee7950a41f0c887ca93b20ca08a39440ae6e8ed83e01709611584526cecb777c3ab3b9ff9d3b88fbe108fc916396d8f01d8ed2364fb5cd32aa405f819ce4738a009929a2acbd16a012938b07f95ca1ae0e95e644d7bb38de900170b1c39b9895e007f5a068d5d9bc448cf9ce3d6fa287d1f01ec5c1ec86a5b2ae55b1c71d7a4281f83b4d2356613f3113bd858a41e9fb10900cdf67dfe485c8c42aeca5c2dac457ab1dfd98df8f19d09bb4a194fc4966418f84a218ead3d6100e567124ea5c106fb1b00399865a965906250a2cb48abd2e1653b41604f3aa2f376539940c4982a4f6f26bcb89bd58cda247bdb02a51636cc5e64024c816df1882a1c2829c6af47014157efb241de61aeaa06d3b8d89c0953ac1e94857c15f2497e0ea3eb6ff80362cb3c0b";
+        (bytes memory input, uint _) = GenericEllipticCurve.formPairingInput(bls12_384_mul_params, numPairs, pairs);
+        return HelpersForTests.equal(input, correctInput);
+    }
 }

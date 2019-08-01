@@ -77,23 +77,43 @@ describe('Test Inputs', () => {
     expect(result).to.eq(true);
   });
 
-  // it('G2 Add Input', async () => {
-  //   let result = await contract.testFormAddG2Input();
-  //   expect(result).to.eq(true);
-  // });
+  it('G2 Add Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testAddG2InputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
-  // it('G2 Mul Input', async () => {
-  //   let result = await contract.testFormMulG2Input();
-  //   expect(result).to.eq(true);
-  // });
+  it('G2 Mul Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testMulG2InputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
-  // it('G2 MultiExp Input', async () => {
-  //   let result = await contract.testFormMultiExpG2Input();
-  //   expect(result).to.eq(true);
-  // });
+  it('G2 MultiExp Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testMultiExpG2InputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
-  // it('Pairing Input', async () => {
-  //   let result = await contract.testFormPairingInput();
-  //   expect(result).to.eq(true);
-  // });
+  it('G2 Add Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormAddG2InputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('G2 Mul Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormMulG2InputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('G2 MultiExp Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormMultiExpG2InputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('Pairing Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testPairingInputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('Pairing Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormPairingInputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 });
