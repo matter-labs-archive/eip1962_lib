@@ -13,34 +13,6 @@ contract TestBytes {
         return HelpersForTests.equal(hex"00aaf1", hex"00aaff");
     }
 
-    function testSliceCorrect()  public pure returns (bool) {
-        return HelpersForTests.equal(
-            Bytes.slice(hex"00aaf1ab51", 2, 2),
-            hex"f1ab"
-        );
-    }
-
-    function testSliceNotCorrect()  public pure returns (bool) {
-        return HelpersForTests.equal(
-            Bytes.slice(hex"00aaf1ab51", 2, 2),
-            hex"aaab"
-        );
-    }
-
-    function testToBytesFromUIntCorrect() public pure returns (bool) {
-        return HelpersForTests.equal(
-            Bytes.toBytesFromUInt(257, 4),
-            hex"00000101"
-        );
-    }
-
-    function testToBytesFromUIntNotCorrect() public pure returns (bool) {
-        return HelpersForTests.equal(
-            Bytes.toBytesFromUInt(259, 4),
-            hex"00000101"
-        );
-    }
-
     function testToBytesFromUInt8Correct() public pure returns (bool) {
         return HelpersForTests.equal(
             Bytes.toBytesFromUInt8(128),

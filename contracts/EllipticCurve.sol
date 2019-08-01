@@ -38,8 +38,8 @@ contract EllipticCurve {
     // - rhs - second point's X and Y coordinates in G1Point struct representation
     // Returns the newly created bytes memory.
     function g1Add(
-        CommonTypes.G1Point memory lhs,
-        CommonTypes.G1Point memory rhs
+        bytes memory lhs,
+        bytes memory rhs
     ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1AddInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
@@ -56,7 +56,7 @@ contract EllipticCurve {
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
     function g1Mul(
-        CommonTypes.G1Point memory lhs,
+        bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MulInput(curveParams, lhs, rhs);
@@ -71,15 +71,13 @@ contract EllipticCurve {
     // Compies the G1 Multiexponentiation operation result.
     // Params:
     // - numPairs - number of (point, scalar) pairs for multiexponentiation
-    // - point -  point's X and Y coordinates in G1Point struct representation
-    // - scalar - sсalar order of exponentiation in bytes
+    // - pointScalarPairs - (point, scalar) pairs for multiexponentiation
     // Returns the newly created bytes memory.
     function g1MultiExp(
         uint8 numPairs,
-        CommonTypes.G1Point memory point,
-        bytes memory scalar
+        bytes memory pointScalarPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -94,8 +92,8 @@ contract EllipticCurve {
     // - rhs - second point's X and Y coordinates in G2Point struct representation
     // Returns the newly created bytes memory.
     function g2Add(
-        CommonTypes.G2Point memory lhs,
-        CommonTypes.G2Point memory rhs
+        bytes memory lhs,
+        bytes memory rhs
     ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2AddInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
@@ -112,7 +110,7 @@ contract EllipticCurve {
     // - rhs - sсalar multiplication factor in bytes
     // Returns the newly created bytes memory.
     function g2Mul(
-        CommonTypes.G2Point memory lhs,
+        bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MulInput(curveParams, lhs, rhs);
@@ -127,15 +125,13 @@ contract EllipticCurve {
     // Compies the G2 Multiexponentiation operation result.
     // Params:
     // - numPairs - number of (point, scalar) pairs for multiexponentiation
-    // - point -  point's X and Y coordinates in G2Point struct representation
-    // - scalar - sсalar order of exponentiation in bytes
+    // - pointScalarPairs - (point, scalar) pairs for multiexponentiation
     // Returns the newly created bytes memory.
     function g2MultiExp(
         uint8 numPairs,
-        CommonTypes.G2Point memory point,
-        bytes memory scalar
+        bytes memory pointScalarPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -146,13 +142,15 @@ contract EllipticCurve {
 
     // Verifies the correctness of the pairing operation parameters.
     // Params:
-    // - pairs -  point pairs array encoded as (G1 point, G2 point) in bytes
+    // - pairs - point pairs array encoded as (G1 point, G2 point) in bytes
+    // - numPairs - number of pairs as uint8
     // Returns:
     // If result of a pairing (element of Fp12) is equal to identity - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function pairing(
-        CommonTypes.Pair[] memory pairs
+        bytes memory pairs,
+        uint8 numPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs);
+        (bytes memory input, uint outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs, numPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,

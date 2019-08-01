@@ -24,24 +24,6 @@ library CommonTypes {
         uint8 sign;
     }
 
-    // G1 Point
-    struct G1Point {
-        uint X;
-        uint Y;
-    }
-
-    // G2 Point
-    struct G2Point {
-        uint[2] X;
-        uint[2] Y;
-    }
-
-    // Points pair
-    struct Pair {
-        G1Point g1p;
-        G2Point g2p;
-    }
-
     // Enum describes possible curves.
     // 'Custom' is user defined curve.
     // 'Undefined' curve is undefined;

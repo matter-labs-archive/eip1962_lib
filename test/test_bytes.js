@@ -33,26 +33,6 @@ describe('Test Bytes', () => {
     expect(result).to.eq(false);
   });
 
-  it('Slice correct', async () => {
-    let result = await contract.testSliceCorrect();
-    expect(result).to.eq(true);
-  });
-
-  it('Slice not correct', async () => {
-    let result = await contract.testSliceNotCorrect();
-    expect(result).to.eq(false);
-  });
-
-  it('To bytes from uint correct', async () => {
-    let result = await contract.testToBytesFromUIntCorrect();
-    expect(result).to.eq(true);
-  });
-
-  it('To bytes from uint not correct', async () => {
-    let result = await contract.testToBytesFromUIntNotCorrect();
-    expect(result).to.eq(false);
-  });
-
   it('To bytes from uint8 correct', async () => {
     let result = await contract.testToBytesFromUInt8Correct();
     expect(result).to.eq(true);

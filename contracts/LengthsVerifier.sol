@@ -6,7 +6,7 @@ import {CommonTypes} from "../contracts/CommonTypes.sol";
 
 library LengthsVerifier {
     // Verifies the correctness of the curve parameters.
-    function verifyCorrectCurveParamsLengths(CommonTypes.CurveParams memory params) private pure {
+    function verifyCorrectCurveParamsLengths(CommonTypes.CurveParams memory params) public pure {
         require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
         require(params.a.length == params.fieldLength, "a should be equal to fieldLength");
         require(params.b.length == params.fieldLength, "b should be equal to fieldLength");
@@ -28,10 +28,9 @@ library LengthsVerifier {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
-        require(lhs.length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
-        require(rhs.length == 2 * curveParams.fieldLength, "rhs should be equal to 2*fieldLength");
+    ) public pure {
+        require(uint(lhs.length) == 2 * (uint(curveParams.fieldLength)), "lhs should be equal to 2*fieldLength");
+        require(uint(rhs.length) == 2 * (uint(curveParams.fieldLength)), "rhs should be equal to 2*fieldLength");
     }
 
     // Verifies the correctness of the g1 mul operation parameters.
@@ -43,10 +42,9 @@ library LengthsVerifier {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
-        require(lhs.length == 2 * curveParams.fieldLength, "lhs should be equal to 2*fieldLength");
-        require(rhs.length == curveParams.groupOrderLength, "rhs should be equal to groupOrderLength");
+    ) public pure {
+        require(uint(lhs.length) == 2 * uint(curveParams.fieldLength), "lhs should be equal to 2*fieldLength");
+        require(uint(rhs.length) == uint(curveParams.groupOrderLength), "rhs should be equal to groupOrderLength");
     }
 
     // Verifies the correctness of the g1 multi exp operation parameters.
@@ -56,12 +54,13 @@ library LengthsVerifier {
     // - scalar - sсalar order of exponentiation in bytes
     function verifyCorrectG1MultiExpDataLengths(
         CommonTypes.CurveParams memory curveParams,
-        bytes memory point,
-        bytes memory scalar
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
-        require(point.length == 2 * curveParams.fieldLength, "point should be equal to 2*fieldLength");
-        require(scalar.length == curveParams.groupOrderLength, "scalar should be equal to groupOrderLength");
+        uint8 numPairs,
+        bytes memory pointScalarPairs
+    ) public pure {
+        require(
+            uint(pointScalarPairs.length) == uint(numPairs) * (2 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength)),
+            "pairs length should be equal to numPairs*(2*fieldLength+groupOrderLength)"
+        );
     }
 
     // Verifies the correctness of the g2 add operation parameters.
@@ -73,15 +72,14 @@ library LengthsVerifier {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
+    ) public pure {
         require(
-            lhs.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
-            "lhs should be equal to extensionDegree * fieldLength"
+            uint(lhs.length) == 2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength),
+            "lhs should be equal to 2 * extensionDegree * fieldLength"
         );
         require(
-            rhs.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
-            "rhs should be equal to extensionDegree * fieldLength"
+            uint(rhs.length) == 2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength),
+            "rhs should be equal to 2 * extensionDegree * fieldLength"
         );
     }
 
@@ -94,14 +92,13 @@ library LengthsVerifier {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
+    ) public pure {
         require(
-            lhs.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
-            "lhs should be equal to extensionDegree * fieldLength"
+            uint(lhs.length) == 2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength),
+            "lhs should be equal to 2 * extensionDegree * fieldLength"
         );
         require(
-            rhs.length == 2 * curveParams.groupOrderLength,
+            uint(rhs.length) == 2 * uint(curveParams.groupOrderLength),
             "rhs should be equal to groupOrderLength"
         );
     }
@@ -113,17 +110,12 @@ library LengthsVerifier {
     // - scalar - sсalar order of exponentiation in bytes
     function verifyCorrectG2MultiExpDataLengths(
         CommonTypes.CurveParams memory curveParams,
-        bytes memory point,
-        bytes memory scalar
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
+        uint8 numPairs,
+        bytes memory pointScalarPairs
+    ) public pure {
         require(
-            point.length == 2 * curveParams.extensionDegree * curveParams.fieldLength,
-            "lhs should be equal to extensionDegree * fieldLength"
-        );
-        require(
-            scalar.length == 2 * curveParams.groupOrderLength,
-            "rhs should be equal to groupOrderLength"
+            uint(pointScalarPairs.length) == uint(numPairs) * (2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength)),
+            "pairs length should be equal to numPairs*(2*extensionDegree*fieldLength+groupOrderLength)"
         );
     }
 
@@ -135,10 +127,9 @@ library LengthsVerifier {
         CommonTypes.CurveParams memory curveParams,
         bytes memory pairs,
         uint8 numPairs
-    ) private pure {
-        verifyCorrectCurveParamsLengths(curveParams);
+    ) public pure {
         require(
-            pairs.length == 6 * curveParams.fieldLength * numPairs,
+            uint(pairs.length) == 6 * uint(curveParams.fieldLength) * uint(numPairs),
             "pairs should be equal to 6 * fieldLength * numPairs"
         );
     }

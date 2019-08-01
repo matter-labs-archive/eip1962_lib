@@ -30,8 +30,8 @@ library GenericEllipticCurveConvenientAPI {
     // Returns the newly created bytes memory.
     function g1Add(
         CommonTypes.PrebuildCurveTypes curveType,
-        CommonTypes.G1Point memory lhs,
-        CommonTypes.G1Point memory rhs
+        bytes memory lhs,
+        bytes memory rhs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
         (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1AddInput(curveParams, lhs, rhs);
@@ -51,7 +51,7 @@ library GenericEllipticCurveConvenientAPI {
     // Returns the newly created bytes memory.
     function g1Mul(
         CommonTypes.PrebuildCurveTypes curveType,
-        CommonTypes.G1Point memory lhs,
+        bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
@@ -68,17 +68,15 @@ library GenericEllipticCurveConvenientAPI {
     // Params:
     // - curveType - prebuild curve type
     // - numPairs - number of (point, scalar) pairs for multiexponentiation
-    // - point -  point's X and Y coordinates in G1Point struct representation
-    // - scalar - sсalar order of exponentiation in bytes
+    // - pointScalarPairs - (point, scalar) pairs for multiexponentiation
     // Returns the newly created bytes memory.
     function g1MultiExp(
         CommonTypes.PrebuildCurveTypes curveType,
         uint8 numPairs,
-        CommonTypes.G1Point memory point,
-        bytes memory scalar
+        bytes memory pointScalarPairs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -95,8 +93,8 @@ library GenericEllipticCurveConvenientAPI {
     // Returns the newly created bytes memory.
     function g2Add(
         CommonTypes.PrebuildCurveTypes curveType,
-        CommonTypes.G2Point memory lhs,
-        CommonTypes.G2Point memory rhs
+        bytes memory lhs,
+        bytes memory rhs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
         (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2AddInput(curveParams, lhs, rhs);
@@ -116,7 +114,7 @@ library GenericEllipticCurveConvenientAPI {
     // Returns the newly created bytes memory.
     function g2Mul(
         CommonTypes.PrebuildCurveTypes curveType,
-        CommonTypes.G2Point memory lhs,
+        bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
@@ -133,17 +131,15 @@ library GenericEllipticCurveConvenientAPI {
     // Params:
     // - curveType - prebuild curve type
     // - numPairs - number of (point, scalar) pairs for multiexponentiation
-    // - point -  point's X and Y coordinates in G2Point struct representation
-    // - scalar - sсalar order of exponentiation in bytes
+    // - pointScalarPairs - (point, scalar) pairs for multiexponentiation
     // Returns the newly created bytes memory.
     function g2MultiExp(
         CommonTypes.PrebuildCurveTypes curveType,
         uint8 numPairs,
-        CommonTypes.G2Point memory point,
-        bytes memory scalar
+        bytes memory pointScalarPairs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, point, scalar);
+        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -160,10 +156,11 @@ library GenericEllipticCurveConvenientAPI {
     // If result of a pairing (element of Fp12) is equal to identity - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function pairing(
         CommonTypes.PrebuildCurveTypes curveType,
-        CommonTypes.Pair[] memory pairs
+        bytes memory pairs,
+        uint8 numPairs
     ) public view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs);
+        (bytes memory input, uint outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs, numPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,

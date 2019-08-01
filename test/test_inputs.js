@@ -27,6 +27,11 @@ describe('Test Inputs', () => {
     contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
   });
 
+  it('Curve params lengths BLS12-384-M curve', async () => {
+    let result = await contract.testCurveParamsLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
   it('G1 op_data for BLS12-384-M curve', async () => {
     let result = await contract.testG1OpDataBLS12_384_M();
     expect(result).to.eq(true);
@@ -42,20 +47,35 @@ describe('Test Inputs', () => {
     expect(result).to.eq(true);
   });
 
-  // it('G1 Add Input', async () => {
-  //   let result = await contract.testFormAddG1Input();
-  //   expect(result).to.eq(true);
-  // });
+  it('G1 Add Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testAddG1InputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
-  // it('G1 Mul Input', async () => {
-  //   let result = await contract.testFormMulG1Input();
-  //   expect(result).to.eq(true);
-  // });
+  it('G1 Mul Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testMulG1InputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
-  // it('G1 MultiExp Input', async () => {
-  //   let result = await contract.testFormMultiExpG1Input();
-  //   expect(result).to.eq(true);
-  // });
+  it('G1 MultiExp Input lengths for BLS12-384-M curve', async () => {
+    let result = await contract.testMultiExpG1InputLengthsBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('G1 Add Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormAddG1InputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('G1 Mul Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormMulG1InputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
+
+  it('G1 MultiExp Input for BLS12-384-M curve', async () => {
+    let result = await contract.testFormMultiExpG1InputBLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
   // it('G2 Add Input', async () => {
   //   let result = await contract.testFormAddG2Input();
