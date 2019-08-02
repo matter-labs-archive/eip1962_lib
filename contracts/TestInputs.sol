@@ -3,7 +3,7 @@ pragma experimental ABIEncoderV2;
 
 import {GenericEllipticCurve} from "../contracts/GenericEllipticCurve.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../test/HelpersForTests.sol";
+import {HelpersForTests} from "../contracts/HelpersForTests.sol";
 import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
 import {LengthsVerifier} from "../contracts/LengthsVerifier.sol";
 
