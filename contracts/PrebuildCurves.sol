@@ -88,4 +88,46 @@ library PrebuildCurves {
             sign: 0x01
         });
     }
+
+    function bn_254_m() public pure returns (CommonTypes.CurveParams memory params) {
+        params = CommonTypes.CurveParams({
+            curveType: 0x02,
+            fieldLength: 0x20,
+            baseFieldModulus: hex"30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47",
+            extensionDegree: 0x02,//unknown
+            a: hex"0000000000000000000000000000000000000000000000000000000000000000",
+            b: hex"0000000000000000000000000000000000000000000000000000000000000003",
+            groupOrderLength: 0x20,
+            groupOrder: hex"30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001",
+            fpNonResidue: hex"30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd46",
+            mainSubgroupOrder: hex"30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001",
+            fp2NonResidue: hex"30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd46",
+            fp6NonResidue: hex"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",//
+            twistType: 0x01,
+            xLength: 0x08,
+            x: hex"44e992b44a6909f1",
+            sign: 0x00
+        });
+    }
+
+    function bn_254_d() public pure returns (CommonTypes.CurveParams memory params) {
+        params = CommonTypes.CurveParams({
+            curveType: 0x02,
+            fieldLength: 0x20,
+            baseFieldModulus: hex"30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47",
+            extensionDegree: 0x02,//unknown
+            a: hex"0000000000000000000000000000000000000000000000000000000000000000",
+            b: hex"0000000000000000000000000000000000000000000000000000000000000003",
+            groupOrderLength: 0x20,
+            groupOrder: hex"30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001",
+            fpNonResidue: hex"30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd46",
+            mainSubgroupOrder: hex"30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001",
+            fp2NonResidue: hex"30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd46",
+            fp6NonResidue: hex"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",//
+            twistType: 0x02,
+            xLength: 0x08,
+            x: hex"44e992b44a6909f1",
+            sign: 0x00
+        });
+    }
 }
