@@ -24,7 +24,6 @@ describe('Test Inputs', () => {
     });
     expect(test.address).to.be.properAddress;
     console.log("Test address:" + test.address);
-    contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
   });
 
   it('Curve params lengths BLS12-384-M curve', async () => {

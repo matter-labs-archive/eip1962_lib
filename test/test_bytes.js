@@ -10,47 +10,47 @@ const {expect} = chai;
 
 // Commented for a while
 describe('Test Bytes', () => {
-  // let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
-  // let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
-  // let test;
-  // let contract;
+  let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
+  let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
+  let test;
+  let contract;
 
-  // beforeEach(async () => {
-  //   test = await deployContract(wallet, TEST_CONTRACT, [], {
-  //     gasLimit: 8000000
-  //   });
-  //   expect(test.address).to.be.properAddress;
-  //   console.log("Test address:" + test.address);
-  //   contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
-  // });
+  beforeEach(async () => {
+    test = await deployContract(wallet, TEST_CONTRACT, [], {
+      gasLimit: 8000000
+    });
+    expect(test.address).to.be.properAddress;
+    console.log("Test address:" + test.address);
+    contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
+  });
 
-  // it('Equal', async () => {
-  //   let result = await contract.testEqual();
-  //   expect(result).to.eq(true);
-  // });
+  it('Equal', async () => {
+    let result = await contract.testEqual();
+    expect(result).to.eq(true);
+  });
 
-  // it('Not equal', async () => {
-  //   let result = await contract.testNotEqual();
-  //   expect(result).to.eq(false);
-  // });
+  it('Not equal', async () => {
+    let result = await contract.testNotEqual();
+    expect(result).to.eq(false);
+  });
 
-  // it('To bytes from uint8 correct', async () => {
-  //   let result = await contract.testToBytesFromUInt8Correct();
-  //   expect(result).to.eq(true);
-  // });
+  it('To bytes from uint8 correct', async () => {
+    let result = await contract.testToBytesFromUInt8Correct();
+    expect(result).to.eq(true);
+  });
 
-  // it('To bytes from uint8 not correct', async () => {
-  //   let result = await contract.testToBytesFromUInt8NotCorrect();
-  //   expect(result).to.eq(false);
-  // });
+  it('To bytes from uint8 not correct', async () => {
+    let result = await contract.testToBytesFromUInt8NotCorrect();
+    expect(result).to.eq(false);
+  });
 
-  // it('Concat correct', async () => {
-  //   let result = await contract.testConcatEqual();
-  //   expect(result).to.eq(true);
-  // });
+  it('Concat correct', async () => {
+    let result = await contract.testConcatEqual();
+    expect(result).to.eq(true);
+  });
 
-  // it('Concat not correct', async () => {
-  //   let result = await contract.testConcatNotEqual();
-  //   expect(result).to.eq(false);
-  // });
+  it('Concat not correct', async () => {
+    let result = await contract.testConcatNotEqual();
+    expect(result).to.eq(false);
+  });
 });
