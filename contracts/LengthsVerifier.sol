@@ -1,4 +1,4 @@
-pragma solidity ^0.5.1;
+pragma solidity ^0.5.10;
 pragma experimental ABIEncoderV2;
 
 import {Bytes} from "../contracts/Bytes.sol";

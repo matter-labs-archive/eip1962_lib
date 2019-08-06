@@ -8,7 +8,6 @@ const TEST_CONTRACT = require('../build/TestBytes');
 chai.use(solidity);
 const {expect} = chai;
 
-// Commented for a while
 describe('Test Bytes', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
