@@ -5,7 +5,7 @@ import {CommonTypes} from "../contracts/CommonTypes.sol";
 
 library PrebuildCurves {
 
-    function bls12_384_m() public pure returns (CommonTypes.CurveParams memory params) {
+    function bls12_384_m() internal pure returns (CommonTypes.CurveParams memory params) {
         params = CommonTypes.CurveParams({
             curveType: 0x01,
             fieldLength: 0x31,
@@ -26,7 +26,7 @@ library PrebuildCurves {
         });
     }
 
-    function bls12_384_d() public pure returns (CommonTypes.CurveParams memory params) {
+    function bls12_384_d() internal pure returns (CommonTypes.CurveParams memory params) {
         params = CommonTypes.CurveParams({
             curveType: 0x01,
             fieldLength: 0x31,
@@ -47,7 +47,7 @@ library PrebuildCurves {
         });
     }
 
-    function bls12_381_m() public pure returns (CommonTypes.CurveParams memory params) {
+    function bls12_381_m() internal pure returns (CommonTypes.CurveParams memory params) {
         params = CommonTypes.CurveParams({
             curveType: 0x01,
             fieldLength: 0x30,
@@ -68,7 +68,7 @@ library PrebuildCurves {
         });
     }
 
-    function bls12_381_d() public pure returns (CommonTypes.CurveParams memory params) {
+    function bls12_381_d() internal pure returns (CommonTypes.CurveParams memory params) {
         params = CommonTypes.CurveParams({
             curveType: 0x01,
             fieldLength: 0x30,
@@ -89,7 +89,7 @@ library PrebuildCurves {
         });
     }
 
-    function bn_254_m() public pure returns (CommonTypes.CurveParams memory params) {
+    function bn_254_m() internal pure returns (CommonTypes.CurveParams memory params) {
         params = CommonTypes.CurveParams({
             curveType: 0x02,
             fieldLength: 0x20,
@@ -110,7 +110,7 @@ library PrebuildCurves {
         });
     }
 
-    function bn_254_d() public pure returns (CommonTypes.CurveParams memory params) {
+    function bn_254_d() internal pure returns (CommonTypes.CurveParams memory params) {
         params = CommonTypes.CurveParams({
             curveType: 0x02,
             fieldLength: 0x20,

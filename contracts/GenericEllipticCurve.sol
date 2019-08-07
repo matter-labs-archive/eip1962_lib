@@ -21,7 +21,7 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for all G1 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) public pure returns (bytes memory) {
+    function getG1OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(2 + 3 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength));
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -42,7 +42,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectG1AddDataLengths(curveParams, lhs, rhs);
 
@@ -67,7 +67,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectG1MulDataLengths(curveParams, lhs, rhs);
 
@@ -92,7 +92,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
         bytes memory pointScalarPairs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectG1MultiExpDataLengths(curveParams, point, scalar);
 
@@ -113,7 +113,7 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for all G2 operations based on curve parameters.
     // Returns the newly created bytes memory.
-    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) public pure returns (bytes memory) {
+    function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(3 + 4 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength));
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
@@ -136,7 +136,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectG2AddDataLengths(curveParams, lhs, rhs);
 
@@ -161,7 +161,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectG2MulDataLengths(curveParams, lhs, rhs);
 
@@ -186,7 +186,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
         bytes memory pointScalarPairs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectG2MultiExpDataLengths(curveParams, point, scalar);
 
@@ -205,7 +205,7 @@ library GenericEllipticCurve {
 
     // Compies the common prefix for pairing operation based on curve parameters.
     // Returns the newly created bytes memory.
-    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) public pure returns (bytes memory) {
+    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(6 + 6 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength) + uint(curveParams.xLength));
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));
@@ -232,7 +232,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory pairs,
         uint8 numPairs
-    ) public pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint) {
 
         // verifyCorrectPairingPairsLengths(curveParams, pairsBytes, numPairs);
 
@@ -259,7 +259,7 @@ library GenericEllipticCurve {
         bytes memory input,
         uint inputLength,
         uint outLength
-    ) public view returns (bytes memory out) {
+    ) internal view returns (bytes memory out) {
         bool result;
         assembly {
             result := staticcall(sub(gas, 2000), contractId, input, inputLength, out, outLength)
