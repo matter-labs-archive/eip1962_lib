@@ -11,7 +11,6 @@ const {expect} = chai;
 describe('Test Inputs', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
-  let test;
   let contract;
 
   beforeEach(async () => {
@@ -19,11 +18,11 @@ describe('Test Inputs', () => {
       let etherString = ethers.utils.formatEther(balance);
       console.log("Wallet balance: " + etherString);
     });
-    test = await deployContract(wallet, TEST_CONTRACT, [], {
+    contract = await deployContract(wallet, TEST_CONTRACT, [], {
       gasLimit: 8000000
     });
-    expect(test.address).to.be.properAddress;
-    console.log("Test address:" + test.address);
+    expect(contract.address).to.be.properAddress;
+    console.log("Test address:" + contract.address);
   });
 
   it('Curve params lengths BLS12-384-M curve', async () => {

@@ -11,16 +11,15 @@ const {expect} = chai;
 describe('Test Bytes', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
-  let test;
   let contract;
 
   beforeEach(async () => {
-    test = await deployContract(wallet, TEST_CONTRACT, [], {
+    contract = await deployContract(wallet, TEST_CONTRACT, [], {
       gasLimit: 8000000
     });
-    expect(test.address).to.be.properAddress;
-    console.log("Test address:" + test.address);
-    contract = new ethers.Contract(test.address, TEST_CONTRACT.abi, provider);
+    expect(contract.address).to.be.properAddress;
+    console.log("Test address:" + contract.address);
+    contract = new ethers.Contract(contract.address, TEST_CONTRACT.abi, provider);
   });
 
   it('Equal', async () => {
