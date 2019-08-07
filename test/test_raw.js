@@ -32,10 +32,10 @@ describe('Test Raw', () => {
 //     expect(result).to.eq(true);
 //   });
 
-//   it('testG1Mul_BLS12_384_M', async () => {
-//     let result = await contract.testG1Mul_BLS12_384_M();
-//     expect(result).to.eq(true);
-//   });
+  it('testG1Mul_BLS12_384_M', async () => {
+    let result = await contract.testG1Mul_BLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
 //   it('testG1Multiexp_BLS12_384_M', async () => {
 //     let result = await contract.testG1Multiexp_BLS12_384_M();
