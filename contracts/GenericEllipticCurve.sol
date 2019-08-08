@@ -25,8 +25,8 @@ library GenericEllipticCurve {
         bytes memory opData = new bytes(2 + 3 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength));
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
-        opData = Bytes.concat(opData, curveParams.a);
-        opData = Bytes.concat(opData, curveParams.b);
+        opData = Bytes.concat(opData, curveParams.aG1);
+        opData = Bytes.concat(opData, curveParams.bG1);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.groupOrderLength));
         opData = Bytes.concat(opData, curveParams.groupOrder);
         return opData;
@@ -114,13 +114,13 @@ library GenericEllipticCurve {
     // Compies the common prefix for all G2 operations based on curve parameters.
     // Returns the newly created bytes memory.
     function getG2OpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
-        bytes memory opData = new bytes(3 + 4 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength));
+        bytes memory opData = new bytes(3 + 2 * uint(curveParams.fieldLength) + 2 * uint(curveParams.fieldLength) * uint(curveParams.extensionDegree) + uint(curveParams.groupOrderLength));
         opData = Bytes.toBytesFromUInt8(curveParams.fieldLength);
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.extensionDegree));
         opData = Bytes.concat(opData, curveParams.fpNonResidue);
-        opData = Bytes.concat(opData, curveParams.a);
-        opData = Bytes.concat(opData, curveParams.b);
+        opData = Bytes.concat(opData, curveParams.aG2);
+        opData = Bytes.concat(opData, curveParams.bG2);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.groupOrderLength));
         opData = Bytes.concat(opData, curveParams.groupOrder);
         return opData;
@@ -203,17 +203,17 @@ library GenericEllipticCurve {
 
     // MARK: - Pairing operation
 
-    // Compies the common prefix for pairing operation based on curve parameters.
+    // Compies the common prefix for BLS12 pairing operation based on curve parameters.
     // Returns the newly created bytes memory.
-    function getPairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
+    function getBLS12PairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
         bytes memory opData = new bytes(6 + 6 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength) + uint(curveParams.xLength));
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));
         opData = Bytes.concat(opData, curveParams.baseFieldModulus);
-        opData = Bytes.concat(opData, curveParams.a);
-        opData = Bytes.concat(opData, curveParams.b);
+        opData = Bytes.concat(opData, curveParams.aG1);
+        opData = Bytes.concat(opData, curveParams.bG1);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.groupOrderLength));
-        opData = Bytes.concat(opData, curveParams.mainSubgroupOrder);
+        opData = Bytes.concat(opData, curveParams.groupOrder);
         opData = Bytes.concat(opData, curveParams.fp2NonResidue);
         opData = Bytes.concat(opData, curveParams.fp6NonResidue);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.twistType));
@@ -223,12 +223,12 @@ library GenericEllipticCurve {
         return opData;
     }
 
-    // Compies the pairing operation input and outputLength.
+    // Compies the BLS12 pairing operation input and outputLength.
     // Params:
     // - curveParams - curve parameters
     // - pairs - point pairs encoded as (G1 point, G2 point) in CommonTypes.Pair struct representation
     // Returns: pairing input and outputLength
-    function formPairingInput(
+    function formBLS12PairingInput(
         CommonTypes.CurveParams memory curveParams,
         bytes memory pairs,
         uint8 numPairs
@@ -236,7 +236,7 @@ library GenericEllipticCurve {
 
         // verifyCorrectPairingPairsLengths(curveParams, pairsBytes, numPairs);
 
-        bytes memory opData = getPairingOpDataInBytes(curveParams);
+        bytes memory opData = getBLS12PairingOpDataInBytes(curveParams);
 
         bytes memory input = new bytes(2 + opData.length + pairs.length);
         input = Bytes.toBytesFromUInt8(OPERATION_PAIRING);

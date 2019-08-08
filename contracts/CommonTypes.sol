@@ -10,12 +10,13 @@ library CommonTypes {
         uint8 fieldLength;
         bytes baseFieldModulus;
         uint8 extensionDegree;
-        bytes a;
-        bytes b;
+        bytes aG1;
+        bytes bG1;
+        bytes aG2;
+        bytes bG2;
         uint8 groupOrderLength;
         bytes groupOrder;
         bytes fpNonResidue;
-        bytes mainSubgroupOrder;
         bytes fp2NonResidue;
         bytes fp6NonResidue;
         uint8 twistType;

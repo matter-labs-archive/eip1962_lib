@@ -6,14 +6,29 @@ import {CommonTypes} from "../contracts/CommonTypes.sol";
 
 library LengthsVerifier {
     // Verifies the correctness of the curve parameters.
-    function verifyCorrectCurveParamsLengths(CommonTypes.CurveParams memory params) internal pure {
+    function verifyCorrectCurveParamsLengthsForG1Op(CommonTypes.CurveParams memory params) internal pure {
         require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
-        require(params.a.length == params.fieldLength, "a should be equal to fieldLength");
-        require(params.b.length == params.fieldLength, "b should be equal to fieldLength");
+        require(params.aG1.length == params.fieldLength, "aG1 should be equal to fieldLength");
+        require(params.bG1.length == params.fieldLength, "bG1 should be equal to fieldLength");
         require(params.groupOrder.length == params.groupOrderLength, "groupOrder should be equal to groupOrderLength");
+    }
+
+    // Verifies the correctness of the curve parameters.
+    function verifyCorrectCurveParamsLengthsForG2Op(CommonTypes.CurveParams memory params) internal pure {
         require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
+        require(params.aG2.length == params.extensionDegree * params.fieldLength, "aG2 should be equal to extensionDegree * fieldLength");
+        require(params.bG2.length == params.extensionDegree * params.fieldLength, "bG2 should be equal to extensionDegree * fieldLength");
         require(params.fpNonResidue.length == params.fieldLength, "fpNonResidue should be equal to fieldLength");
-        require(params.mainSubgroupOrder.length == params.groupOrderLength, "mainSubgroupOrder should be equal to groupOrderLength");
+        require(params.groupOrder.length == params.groupOrderLength, "groupOrder should be equal to groupOrderLength");
+    }
+
+    // Verifies the correctness of the curve parameters.
+    function verifyCorrectBLS12CurveParamsLengthsForPairingOp(CommonTypes.CurveParams memory params) internal pure {
+        require(params.baseFieldModulus.length == params.fieldLength, "baseFieldModulus should be equal to fieldLength");
+        require(params.aG1.length == params.fieldLength, "a should be equal to fieldLength");
+        require(params.bG1.length == params.fieldLength, "b should be equal to fieldLength");
+        require(params.fpNonResidue.length == params.fieldLength, "fpNonResidue should be equal to fieldLength");
+        require(params.groupOrder.length == params.groupOrderLength, "groupOrder should be equal to groupOrderLength");
         require(params.fp2NonResidue.length == params.fieldLength, "fp2NonResidue should be equal to fieldLength");
         require(params.fp6NonResidue.length == 2 * params.fieldLength, "fp6NonResidue should be equal to 2 * fieldLength");
         require(params.x.length == params.xLength, "x should be equal to xLength");

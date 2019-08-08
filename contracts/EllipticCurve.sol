@@ -150,7 +150,7 @@ contract EllipticCurve {
         bytes memory pairs,
         uint8 numPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs, numPairs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formBLS12PairingInput(curveParams, pairs, numPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
