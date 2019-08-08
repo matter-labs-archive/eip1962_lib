@@ -37,10 +37,10 @@ describe('Test Raw', () => {
 //     expect(result).to.eq(true);
 //   });
 
-//   it('testG2Add_BLS12_384_M', async () => {
-//     let result = await contract.testG2Add_BLS12_384_M();
-//     expect(result).to.eq(true);
-//   });
+  it('testG2Add_BLS12_384_M', async () => {
+    let result = await contract.testG2Add_BLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
   it('testG2Mul_BLS12_384_M', async () => {
     let result = await contract.testG2Mul_BLS12_384_M();
