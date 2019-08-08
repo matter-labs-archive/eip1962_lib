@@ -22,15 +22,10 @@ describe('Test Raw', () => {
     contract = new ethers.Contract(contract.address, TEST_CONTRACT.abi, provider);
   });
 
-  // it('simplePairingTest', async () => {
-  //   let result = await contract.simplePairingTest();
-  //   expect(result).to.eq(true);
-  // });
-
-//   it('testG1Add_BLS12_384_M', async () => {
-//     let result = await contract.testG1Add_BLS12_384_M();
-//     expect(result).to.eq(true);
-//   });
+  it('testG1Add_BLS12_384_M', async () => {
+    let result = await contract.testG1Add_BLS12_384_M();
+    expect(result).to.eq(true);
+  });
 
   it('testG1Mul_BLS12_384_M', async () => {
     let result = await contract.testG1Mul_BLS12_384_M();
