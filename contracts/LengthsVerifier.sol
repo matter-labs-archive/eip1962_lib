@@ -29,8 +29,8 @@ library LengthsVerifier {
         bytes memory lhs,
         bytes memory rhs
     ) internal pure {
-        require(uint(lhs.length) == 2 * (uint(curveParams.fieldLength)), "lhs should be equal to 2*fieldLength");
-        require(uint(rhs.length) == 2 * (uint(curveParams.fieldLength)), "rhs should be equal to 2*fieldLength");
+        require(lhs.length == 2 * (uint256(curveParams.fieldLength)), "lhs should be equal to 2*fieldLength");
+        require(rhs.length == 2 * (uint256(curveParams.fieldLength)), "rhs should be equal to 2*fieldLength");
     }
 
     // Verifies the correctness of the g1 mul operation parameters.
@@ -43,8 +43,8 @@ library LengthsVerifier {
         bytes memory lhs,
         bytes memory rhs
     ) internal pure {
-        require(uint(lhs.length) == 2 * uint(curveParams.fieldLength), "lhs should be equal to 2*fieldLength");
-        require(uint(rhs.length) == uint(curveParams.groupOrderLength), "rhs should be equal to groupOrderLength");
+        require(lhs.length == 2 * uint256(curveParams.fieldLength), "lhs should be equal to 2*fieldLength");
+        require(rhs.length == uint256(curveParams.groupOrderLength), "rhs should be equal to groupOrderLength");
     }
 
     // Verifies the correctness of the g1 multi exp operation parameters.
@@ -58,7 +58,7 @@ library LengthsVerifier {
         bytes memory pointScalarPairs
     ) internal pure {
         require(
-            uint(pointScalarPairs.length) == uint(numPairs) * (2 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength)),
+            pointScalarPairs.length == uint256(numPairs) * (2 * uint256(curveParams.fieldLength) + uint256(curveParams.groupOrderLength)),
             "pairs length should be equal to numPairs*(2*fieldLength+groupOrderLength)"
         );
     }
@@ -74,11 +74,11 @@ library LengthsVerifier {
         bytes memory rhs
     ) internal pure {
         require(
-            uint(lhs.length) == 2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength),
+            lhs.length == 2 * uint256(curveParams.extensionDegree) * uint(curveParams.fieldLength),
             "lhs should be equal to 2 * extensionDegree * fieldLength"
         );
         require(
-            uint(rhs.length) == 2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength),
+            rhs.length == 2 * uint256(curveParams.extensionDegree) * uint(curveParams.fieldLength),
             "rhs should be equal to 2 * extensionDegree * fieldLength"
         );
     }
@@ -94,11 +94,11 @@ library LengthsVerifier {
         bytes memory rhs
     ) internal pure {
         require(
-            uint(lhs.length) == 2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength),
+            lhs.length == 2 * uint256(curveParams.extensionDegree) * uint(curveParams.fieldLength),
             "lhs should be equal to 2 * extensionDegree * fieldLength"
         );
         require(
-            uint(rhs.length) == uint(curveParams.groupOrderLength),
+            rhs.length == uint256(curveParams.groupOrderLength),
             "rhs should be equal to groupOrderLength"
         );
     }
@@ -114,7 +114,7 @@ library LengthsVerifier {
         bytes memory pointScalarPairs
     ) internal pure {
         require(
-            uint(pointScalarPairs.length) == uint(numPairs) * (2 * uint(curveParams.extensionDegree) * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength)),
+            pointScalarPairs.length == uint256(numPairs) * (2 * uint256(curveParams.extensionDegree) * uint256(curveParams.fieldLength) + uint256(curveParams.groupOrderLength)),
             "pairs length should be equal to numPairs*(2*extensionDegree*fieldLength+groupOrderLength)"
         );
     }
@@ -129,7 +129,7 @@ library LengthsVerifier {
         uint8 numPairs
     ) internal pure {
         require(
-            uint(pairs.length) == 6 * uint(curveParams.fieldLength) * uint(numPairs),
+            pairs.length == 6 * uint256(curveParams.fieldLength) * uint256(numPairs),
             "pairs should be equal to 6 * fieldLength * numPairs"
         );
     }

@@ -42,7 +42,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectG1AddDataLengths(curveParams, lhs, rhs);
 
@@ -54,7 +54,7 @@ library GenericEllipticCurve {
         input = Bytes.concat(input, lhs);
         input = Bytes.concat(input, rhs);
 
-        return (input, 2*curveParams.fieldLength);
+        return (input, uint256(2*curveParams.fieldLength));
     }
 
     // Compies the G1 Mul operation result.
@@ -67,7 +67,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectG1MulDataLengths(curveParams, lhs, rhs);
 
@@ -79,7 +79,7 @@ library GenericEllipticCurve {
         input = Bytes.concat(input, lhs);
         input = Bytes.concat(input, rhs);
 
-        return (input, 2*curveParams.fieldLength);
+        return (input, uint256(2*curveParams.fieldLength));
     }
 
     // Compies the G1 Multiexponentiation operation result.
@@ -92,7 +92,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
         bytes memory pointScalarPairs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectG1MultiExpDataLengths(curveParams, point, scalar);
 
@@ -104,7 +104,7 @@ library GenericEllipticCurve {
         input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
         input = Bytes.concat(input, pointScalarPairs);
 
-        return (input, 2*curveParams.fieldLength);
+        return (input, uint256(2*curveParams.fieldLength));
     }
 
     //
@@ -136,7 +136,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectG2AddDataLengths(curveParams, lhs, rhs);
 
@@ -148,7 +148,7 @@ library GenericEllipticCurve {
         input = Bytes.concat(input, lhs);
         input = Bytes.concat(input, rhs);
 
-        return (input, 2*curveParams.extensionDegree*curveParams.fieldLength);
+        return (input, uint256(2*curveParams.extensionDegree*curveParams.fieldLength));
     }
 
     // Compies the G2 Mul operation result.
@@ -161,7 +161,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory lhs,
         bytes memory rhs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectG2MulDataLengths(curveParams, lhs, rhs);
 
@@ -173,7 +173,7 @@ library GenericEllipticCurve {
         input = Bytes.concat(input, lhs);
         input = Bytes.concat(input, rhs);
 
-        return (input, 2*curveParams.extensionDegree*curveParams.fieldLength);
+        return (input, uint256(2*curveParams.extensionDegree*curveParams.fieldLength));
     }
 
     // Compies the G2 Multiexponentiation operation result.
@@ -186,7 +186,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         uint8 numPairs,
         bytes memory pointScalarPairs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectG2MultiExpDataLengths(curveParams, point, scalar);
 
@@ -198,7 +198,7 @@ library GenericEllipticCurve {
         input = Bytes.concat(input, Bytes.toBytesFromUInt8(numPairs));
         input = Bytes.concat(input, pointScalarPairs);
 
-        return (input, 2*curveParams.extensionDegree*curveParams.fieldLength);
+        return (input, uint256(2*curveParams.extensionDegree*curveParams.fieldLength));
     }
 
     // MARK: - Pairing operation
@@ -232,7 +232,7 @@ library GenericEllipticCurve {
         CommonTypes.CurveParams memory curveParams,
         bytes memory pairs,
         uint8 numPairs
-    ) internal pure returns (bytes memory, uint) {
+    ) internal pure returns (bytes memory, uint256) {
 
         // verifyCorrectPairingPairsLengths(curveParams, pairsBytes, numPairs);
 
@@ -255,15 +255,17 @@ library GenericEllipticCurve {
     // Returns: if result of a pairing (element of Fp12) is equal to identity
     //  - return single byte 0x01, otherwise return 0x00 following the existing ABI for BN254 precompile.
     function callEip1962(
-        uint contractId,
+        uint256 contractId,
         bytes memory input,
-        uint inputLength,
-        uint outputLength
-    ) internal view returns (bytes memory output) {
+        uint256 inputLength,
+        uint256 outputLength
+    ) internal view returns (bytes memory) {
+        bytes memory output = new bytes(outputLength);
         assembly {
             if iszero(staticcall(gas, contractId, add(input, 0x20), inputLength, add(output, 0x20), outputLength)) {
-               invalid()
+                invalid()
             }
         }
+        return output;
     }
 }

@@ -41,7 +41,7 @@ contract EllipticCurve {
         bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1AddInput(curveParams, lhs, rhs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG1AddInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -59,7 +59,7 @@ contract EllipticCurve {
         bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MulInput(curveParams, lhs, rhs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG1MulInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -77,7 +77,7 @@ contract EllipticCurve {
         uint8 numPairs,
         bytes memory pointScalarPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, pointScalarPairs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -95,7 +95,7 @@ contract EllipticCurve {
         bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2AddInput(curveParams, lhs, rhs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG2AddInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -113,7 +113,7 @@ contract EllipticCurve {
         bytes memory lhs,
         bytes memory rhs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MulInput(curveParams, lhs, rhs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG2MulInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -131,7 +131,7 @@ contract EllipticCurve {
         uint8 numPairs,
         bytes memory pointScalarPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, pointScalarPairs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
@@ -150,7 +150,7 @@ contract EllipticCurve {
         bytes memory pairs,
         uint8 numPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs, numPairs);
+        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formPairingInput(curveParams, pairs, numPairs);
         result = GenericEllipticCurve.callEip1962(
             1962,
             input,
