@@ -258,12 +258,12 @@ library GenericEllipticCurve {
         uint contractId,
         bytes memory input,
         uint inputLength,
-        uint outLength
-    ) internal view returns (bytes memory out) {
-        bool result;
+        uint outputLength
+    ) internal view returns (bytes memory output) {
         assembly {
-            result := staticcall(sub(gas, 2000), contractId, input, inputLength, out, outLength)
+            if iszero(staticcall(gas, contractId, add(input, 0x20), inputLength, add(output, 0x20), outputLength)) {
+               invalid()
+            }
         }
-        require(result, "Failed to call EIP1962 precompile");
     }
 }
