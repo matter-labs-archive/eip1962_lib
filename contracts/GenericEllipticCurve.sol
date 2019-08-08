@@ -206,6 +206,7 @@ library GenericEllipticCurve {
     // Compies the common prefix for BLS12 pairing operation based on curve parameters.
     // Returns the newly created bytes memory.
     function getBLS12PairingOpDataInBytes(CommonTypes.CurveParams memory curveParams) internal pure returns (bytes memory) {
+        require(curveParams.curveType == 0x01, "Curve type should be equal to 0x01 - BLS12 family");
         bytes memory opData = new bytes(6 + 6 * uint(curveParams.fieldLength) + uint(curveParams.groupOrderLength) + uint(curveParams.xLength));
         opData = Bytes.toBytesFromUInt8(curveParams.curveType);
         opData = Bytes.concat(opData, Bytes.toBytesFromUInt8(curveParams.fieldLength));
@@ -233,6 +234,7 @@ library GenericEllipticCurve {
         bytes memory pairs,
         uint8 numPairs
     ) internal pure returns (bytes memory, uint256) {
+        require(curveParams.curveType == 0x01, "Curve type should be equal to 0x01 - BLS12 family");
 
         // verifyCorrectPairingPairsLengths(curveParams, pairsBytes, numPairs);
 
