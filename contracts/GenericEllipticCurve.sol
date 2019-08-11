@@ -263,9 +263,19 @@ library GenericEllipticCurve {
         uint256 outputLength
     ) internal view returns (bytes memory) {
         bytes memory output = new bytes(outputLength);
-        assembly {
-            if iszero(staticcall(gas, contractId, add(input, 0x20), inputLength, add(output, 0x20), outputLength)) {
-                invalid()
+        if (outputLength == 1) {
+            uint8[1] memory outputByte;
+            assembly {
+                if iszero(staticcall(gas, contractId, add(input, 0x20), inputLength, outputByte, 0x20)) {
+                    invalid()
+                }
+            }
+            output = Bytes.toBytesFromUInt8(outputByte[0]);
+        } else {
+            assembly {
+                if iszero(staticcall(gas, contractId, add(input, 0x20), inputLength, add(output, 0x20), outputLength)) {
+                    invalid()
+                }
             }
         }
         return output;
