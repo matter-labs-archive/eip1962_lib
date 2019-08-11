@@ -160,13 +160,15 @@ library GenericEllipticCurveConvenientAPI {
         uint8 numPairs
     ) internal view returns (bytes memory result) {
         CommonTypes.CurveParams memory curveParams = getParamsForCurve(curveType);
-        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formBLS12PairingInput(curveParams, pairs, numPairs);
-        result = GenericEllipticCurve.callEip1962(
-            9,
-            input,
-            input.length,
-            outputLength
-        );
+        if (curveParams.curveType == 0x01) {
+            (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formBLS12PairingInput(curveParams, pairs, numPairs);
+            result = GenericEllipticCurve.callEip1962(
+                9,
+                input,
+                input.length,
+                outputLength
+            );
+        }
     }
 
 }

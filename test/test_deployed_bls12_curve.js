@@ -3,12 +3,12 @@ const chai = require('chai');
 const {deployContract, solidity} = require('ethereum-waffle');
 const ethers = require('ethers');
 
-const TEST_CONTRACT = require('../build/TestDeployedCurve');
+const TEST_CONTRACT = require('../build/TestDeployedBLS12Curve');
 
 chai.use(solidity);
 const {expect} = chai;
 
-describe('Test Deployed Curve', () => {
+describe('Test Deployed BLS12 Curve', () => {
   let provider = new ethers.providers.JsonRpcProvider(process.env.JSON_RPC_URL);
   let wallet = new ethers.Wallet(process.env.WALLET_PK, provider);
   let contract;
@@ -24,7 +24,7 @@ describe('Test Deployed Curve', () => {
 
   it('G1 Add', async () => {
     let result = await contract.testAddG1();
-    console.log(expect(result).to);
+    expect(result).to.eq(true);
   });
 
   // it('G1 Mul', async () => {

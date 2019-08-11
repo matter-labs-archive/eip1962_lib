@@ -2,7 +2,6 @@ pragma solidity ^0.5.10;
 pragma experimental ABIEncoderV2;
 
 import {GenericEllipticCurve} from "../contracts/GenericEllipticCurve.sol";
-import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
 import {CommonTypes} from "../contracts/CommonTypes.sol";
 
 contract EllipticCurve {
@@ -43,7 +42,7 @@ contract EllipticCurve {
     ) public view returns (bytes memory result) {
         (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG1AddInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength
@@ -61,7 +60,7 @@ contract EllipticCurve {
     ) public view returns (bytes memory result) {
         (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG1MulInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength
@@ -79,7 +78,7 @@ contract EllipticCurve {
     ) public view returns (bytes memory result) {
         (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG1MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength
@@ -97,7 +96,7 @@ contract EllipticCurve {
     ) public view returns (bytes memory result) {
         (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG2AddInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength
@@ -115,7 +114,7 @@ contract EllipticCurve {
     ) public view returns (bytes memory result) {
         (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG2MulInput(curveParams, lhs, rhs);
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength
@@ -133,7 +132,7 @@ contract EllipticCurve {
     ) public view returns (bytes memory result) {
         (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formG2MultiExpInput(curveParams, numPairs, pointScalarPairs);
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength
@@ -150,9 +149,14 @@ contract EllipticCurve {
         bytes memory pairs,
         uint8 numPairs
     ) public view returns (bytes memory result) {
-        (bytes memory input, uint256 outputLength) = GenericEllipticCurve.formBLS12PairingInput(curveParams, pairs, numPairs);
+        bytes memory input;
+        uint256 outputLength;
+        // Currently pairing is available only for BLS12 curve family
+        if (curveParams.curveType == 0x01) {
+            (input, outputLength) = GenericEllipticCurve.formBLS12PairingInput(curveParams, pairs, numPairs);
+        }
         result = GenericEllipticCurve.callEip1962(
-            1962,
+            9,
             input,
             input.length,
             outputLength

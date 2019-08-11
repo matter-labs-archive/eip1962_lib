@@ -6,7 +6,7 @@ import {CommonTypes} from "../contracts/CommonTypes.sol";
 import {HelpersForTests} from "../contracts/HelpersForTests.sol";
 import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
 
-contract TestDeployedCurve {
+contract TestDeployedBLS12Curve {
 
     EllipticCurve bls12_384_m;
 
@@ -22,13 +22,12 @@ contract TestDeployedCurve {
         bls12_384_m.changeCurveParams(curveParams);
     }
 
-    function testAddG1() public view returns (bytes memory) {
+    function testAddG1() public view returns (bool) {
         bytes memory correctResult = hex"00bac7ab58397d69d40ee30088f44fc96e363794959408a688228799780aafb3fee41f5abf5b11e7e0add9e460624d41660194ef9a5adecd58f28b842a6a9bc451c76d8cb3f54891d273b5b515a8e1b06ddb917082016c114923b5ce1e8212fbabb1";
         bytes memory p1 = hex"00b1d9d7d4e19966f41ed390530d41eebaaa1c707c3fb44303ae58df3c9e9c0589b4692a397ecdc90103df90ba78fb4a1c01af3190c07b6494b12dba8aae83c6f5a61251f82bdddcf4a00d0e8277cab9a7febdbbdb3f961ba3a2b38b9ad7a6a3cf49";
         bytes memory p2 = hex"02479e227b1762e5a8322ab109842fc1e481440020137ef6cd6282796bad37b95877281633289033017183acf2472e2b6c01851c8aab7868d17dc6bf38ba905a19ab8bcf308f1b417e833fa548f6a33afb4b91488d829cf924caeab5c09ad4593663";
         bytes memory result = bls12_384_m.g1Add(p1, p2);
-        return result;
-        // return HelpersForTests.equal(result, correctResult);
+        return HelpersForTests.equal(result, correctResult);
     }
 
     // function testMulG1() public view returns (bool) {
