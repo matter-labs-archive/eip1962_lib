@@ -1,4 +1,4 @@
-pragma solidity ^0.5.10;
+pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 
 import {EllipticCurve} from "../contracts/EllipticCurve.sol";

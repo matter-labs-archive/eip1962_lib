@@ -1,4 +1,4 @@
-pragma solidity ^0.5.10;
+pragma solidity ^0.5.8;
 
 import {Bytes} from "../contracts/Bytes.sol";
 import {HelpersForTests} from "../contracts/HelpersForTests.sol";
