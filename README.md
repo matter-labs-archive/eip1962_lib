@@ -22,6 +22,8 @@ Install dependencis for library. Go to eip1962_lib folder and run
 yarn
 ```
 
+Create .env file. Feel free to copy .dev.env
+
 Compile contracts and run tests
 ```shell
 npx waffle && npx mocha
