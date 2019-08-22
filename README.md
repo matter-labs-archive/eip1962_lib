@@ -103,7 +103,7 @@ git clone https://github.com/matter-labs/eip1962_lib
 
 Clone geth client with EIP1962 precompile
 ```shell
-git clone -b eip1962 https://github.com/matter-labs/go-ethereum
+git clone -b eip1962_possible_fix https://github.com/matter-labs/go-ethereum
 ```
 
 Create genesis.json file in geth folder to configure private chain
