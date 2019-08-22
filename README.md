@@ -143,7 +143,7 @@ Init geth with created genesis.json
 
 Run geth with console 
 ```shell
-./build/bin/geth --datadir ./datadir --rpc --rpcport 8545 --rpcaddr 127.0.0.1 --rpccorsdomain "*" --rpcapi "eth,net,web3" --port 3000 --networkid 58342 --nodiscover --allow-insecure-unlock console
+./build/bin/geth --datadir ./datadir --rpc --rpcport 8545 --rpcaddr 127.0.0.1 --rpccorsdomain "*" --rpcapi "eth,net,web3" --port 3000 --networkid 10 --nodiscover --allow-insecure-unlock console
 ```
 
 Import account from console
