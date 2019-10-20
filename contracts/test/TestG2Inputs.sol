@@ -1,11 +1,11 @@
 pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 
-import {GenericEllipticCurve} from "../contracts/GenericEllipticCurve.sol";
-import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
-import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
-import {LengthsVerifier} from "../contracts/LengthsVerifier.sol";
+import {GenericEllipticCurve} from "../GenericEllipticCurve.sol";
+import {CommonTypes} from "../CommonTypes.sol";
+import {HelpersForTests} from "./HelpersForTests.sol";
+import {PrebuildCurves} from "../PrebuildCurves.sol";
+import {LengthsVerifier} from "../LengthsVerifier.sol";
 
 contract TestG2Inputs {
 

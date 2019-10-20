@@ -1,10 +1,10 @@
 pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 
-import {EllipticCurve} from "../contracts/EllipticCurve.sol";
-import {CommonTypes} from "../contracts/CommonTypes.sol";
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
-import {PrebuildCurves} from "../contracts/PrebuildCurves.sol";
+import {EllipticCurve} from "../EllipticCurve.sol";
+import {CommonTypes} from "../CommonTypes.sol";
+import {HelpersForTests} from "./HelpersForTests.sol";
+import {PrebuildCurves} from "../PrebuildCurves.sol";
 
 contract TestDeployedBLS12Curve {
 

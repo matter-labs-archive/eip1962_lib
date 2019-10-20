@@ -1,6 +1,6 @@
 pragma solidity ^0.5.8;
 
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
+import {HelpersForTests} from "./HelpersForTests.sol";
 
 contract TestRaw {
 

@@ -1,7 +1,7 @@
 pragma solidity ^0.5.8;
 
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
-import {GenericEllipticCurve} from "../contracts/GenericEllipticCurve.sol";
+import {HelpersForTests} from "./HelpersForTests.sol";
+import {GenericEllipticCurve} from "../GenericEllipticCurve.sol";
 
 contract TestCaller {
 

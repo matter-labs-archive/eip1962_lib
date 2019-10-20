@@ -1,7 +1,7 @@
 pragma solidity ^0.5.8;
 
-import {Bytes} from "../contracts/Bytes.sol";
-import {HelpersForTests} from "../contracts/HelpersForTests.sol";
+import {Bytes} from "../Bytes.sol";
+import {HelpersForTests} from "./HelpersForTests.sol";
 
 contract TestBytes {
 
